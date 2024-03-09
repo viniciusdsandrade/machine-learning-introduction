@@ -1,0 +1,40 @@
+# Ignorar a pasta virtualenv
+.venv/
+
+# Ignorar a pasta do PyCharm ou IntelliJ IDEA
+.idea/
+
+# Ignorar arquivos compilados Python
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignorar arquivos de cache do Python
+*.cache
+
+# Ignorar arquivos de log do Python
+*.log
+
+# Ignorar arquivos gerados pelo coverage.py
+.coverage
+
+# Ignorar arquivos gerados pelo pytest
+.pytest_cache/
+
+# Ignorar diretório de saída de documentação
+docs/_build/
+
+# Ignorar diretório de saída do Sphinx
+build/
+
+# Ignorar arquivos de configuração de editor
+.vscode/
+*.swp
+*.swo
+*.swn
+
+# Ignorar arquivos de configuração de testes
+.tox/
+
+# Ignorar arquivos gerados pelo Jupyter Notebook
+.ipynb_checkpoints/
