@@ -1,3 +1,6 @@
+import random
+import math
+
 n_cities = 17
 
 distances = [
@@ -34,7 +37,21 @@ def nearest_neighbor_algorithm(distances, n_cities):
     unvisited_cities = list(range(1, n_cities))  # Lista com 17 elementos
 
     while unvisited_cities:
-        next = min(unvisited_cities, key=lambda city: distances[tour[-1]][city])
+        next = min(unvisited_cities, key=lambda candidate: distances[tour[-1]][candidate])
+        tour.append(next)
+        unvisited_cities.remove(next)
+
+    return tour
+
+
+def nearest_neighbor_algorithm_estocastic(distances, n_cities):
+    first_city = random.choice(range(n_cities))
+    tour = [first_city]
+    unvisited_cities = list(range(n_cities))
+    unvisited_cities.remove(first_city)
+
+    while unvisited_cities:
+        next = min(unvisited_cities, key=lambda candidate: distances[tour[-1]][candidate])
         tour.append(next)
         unvisited_cities.remove(next)
 
@@ -44,9 +61,79 @@ def nearest_neighbor_algorithm(distances, n_cities):
 def main():
     n_cities = len(distances)
     tour = nearest_neighbor_algorithm(distances, n_cities)
+    print()
     total_distance = get_total_distance(tour)
     print(f"The tour is: {tour}")
     print(f"The total distance of the tour is: {total_distance}")
+
+    tour = nearest_neighbor_algorithm_estocastic(distances, n_cities)
+    total_distance = get_total_distance(tour)
+    print()
+    print(f"The tour is: {tour}")
+    print(f"The total distance of the tour is: {total_distance}")
+
+    # quero fazer um algoritmo que rode 100 vezes e me retorne o menor valor de distância
+    n_cities = len(distances)
+    distance_set = set()
+    tour_dict = {}
+
+    for i in range(1000):
+        tour = nearest_neighbor_algorithm_estocastic(distances, n_cities)
+        total_distance = get_total_distance(tour)
+        distance_set.add(total_distance)
+        tour_dict[total_distance] = tour
+
+    min_distance = min(distance_set)
+    best_tour = tour_dict[min_distance]
+    print()
+    print(f"The best tour is: {best_tour}")
+    print(f"The total distance of the best tour is: {min_distance}")
+
+    n_cities = len(distances)
+    n = 50  # n% do tour será composto por escolhas aleatórias de cidade
+
+    tour = nearest_neighbor_algorithm_2(distances, n_cities, n)
+    total_distance = get_total_distance(tour)
+    print()
+    print(f"The tour is: {tour}")
+    print(f"The total distance of the tour is: {total_distance}")
+
+    # quero fazer um algoritmo que rode 100 vezes e me retorne o menor valor de distância
+    distance_set = set()
+    tour_dict = {}
+
+    for i in range(1000):
+        tour = nearest_neighbor_algorithm_2(distances, n_cities, n)
+        total_distance = get_total_distance(tour)
+        distance_set.add(total_distance)
+        tour_dict[total_distance] = tour
+
+    min_distance = min(distance_set)
+    best_tour = tour_dict[min_distance]
+
+    print()
+    print(f"The best tour is: {best_tour}")
+    print(f"The total distance of the best tour is: {min_distance}")
+
+
+# Quero fazer uma função n% (que vai de 0 a 100% no maximo e o usuario vai passar numeros de 0 a 100)
+# parte do tour a partir do inicio seja composto por escolhas aleatórias
+# e partir de n% + 1 o qual o usuario vai passar, seja feito pelo algoritmo do vizinho mais próximo
+def nearest_neighbor_algorithm_2(distances, n_cities, n):
+    if n < 0 or n > 100:
+        raise ValueError("n must be between 0 and 100")
+
+    n_random_cities = math.floor(n_cities * n / 100)  # Calcula o número de cidades a serem selecionadas aleatoriamente
+
+    tour = random.sample(range(n_cities), n_random_cities)  # Seleciona aleatoriamente n_random_cities cidades
+    unvisited_cities = [city for city in range(n_cities) if city not in tour]  # Lista de cidades não visitadas
+
+    while unvisited_cities:
+        next = min(unvisited_cities, key=lambda candidate: distances[tour[-1]][candidate])
+        tour.append(next)
+        unvisited_cities.remove(next)
+
+    return tour
 
 
 if __name__ == "__main__":

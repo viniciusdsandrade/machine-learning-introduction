@@ -16,6 +16,13 @@
 # Tipos de algoritmo
 # Algoritmo de força bruta = testa todas as possibilidades
 # Algoritmo do Vizinho mais proximo = A cada novo passo escolhe o vizinho mais próximo
+# Algoritmo Deterministico = Sempre retorna o mesmo resultado
+# Algoritmo Estocástico = Pode retornar resultados diferentes
+# Algoritmo Guloso = Escolhe a melhor opção a cada passo
+# Algoritmo Aleatório = Escolhe uma opção aleatória a cada passo
+# Algoritmo de busca local = A cada passo escolhe a melhor opção local
+# Algoritmo de busca global = A cada passo escolhe a melhor opção global
+# ALgoritmo meta-heurístico = Algoritmo que tenta encontrar a melhor solução possível
 
 
 # Representação do grafo
