@@ -128,6 +128,7 @@ def nearest_neighbor_algorithm_2(distances, n_cities, n):
     tour = random.sample(range(n_cities), n_random_cities)  # Seleciona aleatoriamente n_random_cities cidades
     unvisited_cities = [city for city in range(n_cities) if city not in tour]  # Lista de cidades não visitadas
 
+
     while unvisited_cities:
         next = min(unvisited_cities, key=lambda candidate: distances[tour[-1]][candidate])
         tour.append(next)
