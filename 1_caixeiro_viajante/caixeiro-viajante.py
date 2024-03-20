@@ -19,6 +19,7 @@
 # Algoritmo Deterministico = Sempre retorna o mesmo resultado
 # Algoritmo Estocástico = Pode retornar resultados diferentes
 # Algoritmo Guloso = Escolhe a melhor opção a cada passo
+# Algoritmo da Heuristaca da Insercao mais barata = A cada passo escolhe a melhor opção de inserção
 # Algoritmo Aleatório = Escolhe uma opção aleatória a cada passo
 # Algoritmo de busca local = A cada passo escolhe a melhor opção local
 # Algoritmo de busca global = A cada passo escolhe a melhor opção global
