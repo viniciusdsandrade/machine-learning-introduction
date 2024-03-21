@@ -83,51 +83,11 @@ def nearest_neighbor_algorithm_estocastic_2(distances, n_cities, n):
     return tour
 
 
-# Faça um algoritmo do vizinho mais proximo que receba como paramentro um grafo de coordenadas
-# e retorne o caminho e a distancia total percorrida
-# Inteiros positivos
-
-def geradorDeCoordenadasAleatoriasEntreIntervaloDefinido(min, max, n_cities):
-    coordenadas = []
-    for i in range(n_cities):
-        x = random.randint(min, max)
-        y = random.randint(min, max)
-        coordenadas.append((x, y))
-    return coordenadas
-
-
-def distanceBetweenTwoPoints(p1, p2):
-    return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
-
-
-def nearest_neighbor_algorithm_with_coordinates(coordenadas):
-    n_cities = len(coordenadas)
-    tour = [0]
-    unvisited_cities = list(range(1, n_cities))
-
-    while unvisited_cities:
-        next = min(unvisited_cities,
-                   key=lambda candidate: distanceBetweenTwoPoints(coordenadas[tour[-1]], coordenadas[candidate]))
-        tour.append(next)
-        unvisited_cities.remove(next)
-
-    return tour
-
-
-def test_nearest_neighbor_algorithm_com_coordenadas():
-    coordenadas = geradorDeCoordenadasAleatoriasEntreIntervaloDefinido(0, 100, 17)
-    tour = nearest_neighbor_algorithm_with_coordinates(coordenadas)
-    total_distance = get_total_distance(tour)
-
-    print(coordenadas)
-    print(tour)
-    print(total_distance)
-
-
 def test_nearest_neighbor_algorithm():
     n_cities = len(distances)
     tour = nearest_neighbor_algorithm(distances, n_cities)
     total_distance = get_total_distance(tour)
+    print(f"Number of cities: {n_cities}")
     print(f"The tour is: {tour}")
     print(f"The total distance of the tour is: {total_distance}")
 
@@ -151,8 +111,6 @@ def test_nearest_neighbor_algorithm_with_random_choices():
 
 
 def main():
-    print("\nTesting nearest neighbor algorithm com coordenadas")
-    test_nearest_neighbor_algorithm_com_coordenadas()
 
     print("\nTesting nearest neighbor algorithm")
     test_nearest_neighbor_algorithm()
