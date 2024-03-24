@@ -1,5 +1,6 @@
 import math
 import random
+import numpy as np
 
 
 coordinates = [(0, 0), (2, 0), (1, 0), (3, 0)]
@@ -25,6 +26,14 @@ def generate_random_coordinates_within_defined_interval(min, max, n_cities):
 
 def distance_between_two_points(p1, p2):
     return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
+
+
+def distance_between_two_points_2(p1, p2):
+    return math.dist(p1, p2)
+
+
+def distance_between_two_points_np(p1, p2):
+    return np.linalg.norm(np.array(p1) - np.array(p2))
 
 
 def nearest_neighbor_tour_with_coordinate_and_indices(coordenadas):
@@ -60,7 +69,7 @@ def test_nearest_neighbor_algorithm_com_coordenadas():
     max = 100
 
     coordenadas = generate_random_coordinates_within_defined_interval(min, max, 10)
-    coordenadas = [(0, 0), (2, 0), (1, 0), (3, 0)]
+    # coordenadas = [(0, 0), (2, 0), (1, 0), (3, 0)]
     tour_indices, tour_coordinate = nearest_neighbor_tour_with_coordinate_and_indices(coordenadas)
 
     print("Coordenadas Geradas:       ", coordenadas)
