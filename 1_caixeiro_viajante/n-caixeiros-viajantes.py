@@ -1,5 +1,6 @@
 import math
 import random
+import matplotlib.pyplot as plt
 
 
 def distance_between_two_points(p1, p2):
@@ -79,25 +80,43 @@ def calculate_total_distance(coords):
     return total_distance
 
 
+def plot_tsp(coords, routes):
+    plt.figure(figsize=(8, 6))
+    for i, route in enumerate(routes):
+        route_coords = [coords[idx] for idx in route]
+        route_coords.append(route_coords[0])  # Para fechar o ciclo
+        x_coords = [coord[0] for coord in route_coords]
+        y_coords = [coord[1] for coord in route_coords]
+        plt.plot(x_coords, y_coords, marker='o', label=f'Rota {i + 1}')
+
+    plt.scatter([coord[0] for coord in coords], [coord[1] for coord in coords], color='red', label='Pontos de parada')
+    plt.xlabel('Coordenada X')
+    plt.ylabel('Coordenada Y')
+    plt.title('Rotas dos Caixeiros Viajantes')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
 # Example usage:
 def run_tests():
     min_interval = 0
     max_interval = 10
-    num_cities = 15
+    num_cities = 5
     total = 0
 
     # Gerar coordenadas aleatórias dentro do intervalo definido
     coords = generate_random_coordinates_within_defined_interval(min_interval, max_interval, num_cities)
 
     # Número de viajantes
-    num_travelers = 2
+    num_travelers = 1
 
     # Executar o algoritmo TSP multi caixeiro-viajante
     routes = held_karp_tsp_multi(coords, num_travelers)
     print(f"Número de viajantes: {num_travelers}")
     print(f"Número de cidades: {num_cities}")
     print(f"Coordenadas: {coords}")
-    print(f"routes", routes)
+    print(f"Rotas: {routes}")
 
     # Exibir as rotas e as distâncias totais para cada viajante
     for i, route in enumerate(routes):
@@ -109,6 +128,9 @@ def run_tests():
 
     total = round(total, 3)  # Arredonda o total para 3 casas decimais
     print(f"Distância total de todos os viajantes: {total}")
+
+    # Plotar as rotas encontradas
+    plot_tsp(coords, routes)
 
 
 def main():
