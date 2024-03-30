@@ -2,31 +2,6 @@ import math
 import random
 
 
-# Relatório do projeto
-# 1 - Introdução ao problema
-# 2 - Qual heuristica estou criando?
-# 3 - Resultados
-
-
-# Entrega - 03/05/2023 23:59 - githubClassRoom (Até 3 dias após o prazo)
-
-# O objetivo da atividade é realizar uma solução genérica do problema do caixeiro viajante: No primeiro momento
-# estudamos algumas heuristicas da resolução do problema com um apenas caixeiro viajante.
-
-# Entretanto, nessa solução, devemos implementar uma solução para n caixeiros viajantes
-# que o usuário irá informar.
-
-# O desafio bonus é implementar uma heuristica diferente das estudadas em aula.
-
-# O numero de caixeiros viajantes deverá ser necessariamente menor ou igual ao numero de cidades.
-# Todos os caixeiros viajantes vão sair da mesma cidade
-
-# Heuristica: Centróide, Vizinho mais próximo, Vizinho mais distânte
-
-
-###############################################################
-# Pensar em uma função
-
 def distance_between_two_points(p1, p2):
     return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
 
@@ -35,60 +10,47 @@ def distance_between_two_points_2(p1, p2):
     return math.dist(p1, p2)
 
 
-def total_distance_of_coordinate_tour(coordenadas):
-    tour_indices, _ = n_traveling_salesman_algorithm(1, coordenadas)
-    total_distance = 0
-    for i in range(len(tour_indices) - 1):
-        total_distance += distance_between_two_points(coordenadas[tour_indices[i]], coordenadas[tour_indices[i + 1]])
-    total_distance += distance_between_two_points(coordenadas[tour_indices[-1]],
-                                                  coordenadas[
-                                                      tour_indices[0]])  # add distance from last city to first city
-    return round(total_distance, 3)
+def held_karp_tsp_multi(coords, num_travelers):
+    n = len(coords)
+    distances = [[distance_between_two_points(coords[i], coords[j]) for j in range(n)] for i in range(n)]
 
+    memo = {}
 
-# Escrever um algoritmo que sorteie a quantidade de cidade entre a quantidade de caixeiros viajantes de maneira aleatória
-# por exemplo: Tenho 4 caixeiros e 20 cidades, o primeiro pega 5, o segundo pega 4, o terceiro pega 6 e o quarto pega 5
-def n_cities_per_salesman(n_caixeiros, n_cities):
-    if n_caixeiros > n_cities:
-        raise ValueError("The number of cities must be greater than or equal to the number of salesmen")
+    # Recursive function that returns the minimum cost of visiting all cities and the path taken
+    def tsp(mask, current):
+        if mask == (1 << n) - 1:  # All cities have been visited
+            return distances[current][0], [current]  # Return to the starting point
+        if (mask, current) in memo:  # Check if this state has been calculated before
+            return memo[(mask, current)]
 
-    cities_per_salesman = [0] * n_caixeiros
-    remaining_cities = n_cities
+        min_cost = float('inf')
+        min_path = []
+        for city in range(n):
+            if mask & (1 << city) == 0:  # If the city has not been visited yet
+                new_mask = mask | (1 << city)  # Update the mask
+                cost, path = tsp(new_mask, city)
+                cost += distances[current][city]
+                if cost < min_cost:
+                    min_cost = cost
+                    min_path = path + [current]
 
-    for i in range(n_caixeiros):
-        if i == n_caixeiros - 1:
-            cities_per_salesman[i] = remaining_cities
-        else:
-            # Distribuir aleatoriamente as cidades entre os caixeiros
-            cities_per_salesman[i] = random.randint(1, remaining_cities - (n_caixeiros - i - 1))
-            remaining_cities -= cities_per_salesman[i]
+        memo[(mask, current)] = min_cost, min_path
+        return min_cost, min_path
 
-    return cities_per_salesman
+    # Find the optimal route for one traveler
+    cost, path = tsp(1, 0)
 
-def n_traveling_salesman_algorithm(n_caixeiros, coordenadas):
-    n_cities = len(coordenadas)
-    cities_per_salesman = n_cities_per_salesman(n_caixeiros, n_cities)
+    # Distribute the cities equally among the travelers
+    num_cities_per_traveler = n // num_travelers
+    routes = []
+    for i in range(num_travelers):
+        start_idx = i * num_cities_per_traveler
+        end_idx = start_idx + num_cities_per_traveler
+        route = path[start_idx:end_idx]
+        route.append(0)  # Return to the starting point
+        routes.append(route)
 
-    tours_indices = []
-    tours_coordinates = []
-
-    for i in range(n_caixeiros):
-        tour_indices = [0]
-        tour_coordinates = [coordenadas[0]]  # Inicia na cidade inicial
-        unvisited_cities = list(range(1, n_cities))
-
-        while len(tour_indices) < cities_per_salesman[i]:
-            next_city = min(unvisited_cities,
-                            key=lambda candidate: distance_between_two_points(coordenadas[tour_indices[-1]],
-                                                                              coordenadas[candidate]))
-            tour_indices.append(next_city)
-            tour_coordinates.append(coordenadas[next_city])
-            unvisited_cities.remove(next_city)
-
-        tours_indices.append(tour_indices)
-        tours_coordinates.append(tour_coordinates)
-
-    return tours_indices, tours_coordinates
+    return routes
 
 
 def generate_random_coordinates_within_defined_interval(min, max, n_cities):
@@ -109,25 +71,48 @@ def generate_random_coordinates_within_defined_interval(min, max, n_cities):
     return coordinates
 
 
-def test_nearest_neighbor_algorithm_com_coordenadas():
-    min = 0
-    max = 100
+# Essa formula não considera a distancia da ultima cidade para o inicio pois o tsp já faz isso
+def calculate_total_distance(coords):
+    total_distance = 0
+    for i in range(len(coords) - 1):
+        total_distance += distance_between_two_points(coords[i], coords[i + 1])
+    return total_distance
 
-    coordenadas = generate_random_coordinates_within_defined_interval(min, max, 10)
-    tour_indices, tour_coordinate = n_traveling_salesman_algorithm(1, coordenadas)
 
-    print("Coordenadas Geradas:       ", coordenadas)
-    print("Tour indices:              ", tour_indices)
-    print("Tour das coordenadas:      ", tour_coordinate)
-    print("Distância total:           ", total_distance_of_coordinate_tour(coordenadas))
+# Example usage:
+def run_tests():
+    min_interval = 0
+    max_interval = 10
+    num_cities = 15
+    total = 0
+
+    # Gerar coordenadas aleatórias dentro do intervalo definido
+    coords = generate_random_coordinates_within_defined_interval(min_interval, max_interval, num_cities)
+
+    # Número de viajantes
+    num_travelers = 2
+
+    # Executar o algoritmo TSP multi caixeiro-viajante
+    routes = held_karp_tsp_multi(coords, num_travelers)
+    print(f"Número de viajantes: {num_travelers}")
+    print(f"Número de cidades: {num_cities}")
+    print(f"Coordenadas: {coords}")
+    print(f"routes", routes)
+
+    # Exibir as rotas e as distâncias totais para cada viajante
+    for i, route in enumerate(routes):
+        print(f"Rota para viajante {i + 1}: {route}")
+        distance = calculate_total_distance([coords[i] for i in route])
+        rounded_distance = round(distance, 3)  # Arredonda para 3 casas decimais
+        print(f"Distância total: {rounded_distance}")
+        total += rounded_distance
+
+    total = round(total, 3)  # Arredonda o total para 3 casas decimais
+    print(f"Distância total de todos os viajantes: {total}")
 
 
 def main():
-    n_caixeiros = 3
-    coordenadas = [(0, 0), (1, 2), (3, 1), (2, 3), (4, 4)]
-    tours_indices, tours_coordinates = n_traveling_salesman_algorithm(n_caixeiros, coordenadas)
-    print("Indices dos caixeiros:", tours_indices)
-    print("Coordenadas dos caixeiros:", tours_coordinates)
+    run_tests()
 
 
 if __name__ == "__main__":
