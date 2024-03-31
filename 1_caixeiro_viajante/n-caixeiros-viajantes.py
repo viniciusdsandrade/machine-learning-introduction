@@ -1,17 +1,16 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import math
 import random
 import time
 
 
-# Função para calcular a distância euclidiana entre dois pontos
-def distance_between_two_points(p1, p2):
-    return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
+def main():
+    run_tests()
 
 
-# Função para calcular a distância euclidiana entre dois pontos
-def distance_between_two_points_2(p1, p2):
-    return math.dist(p1, p2)
+if __name__ == "__main__":
+    main()
 
 
 def n_tsp(coords, num_viajantes):
@@ -30,7 +29,7 @@ def n_tsp(coords, num_viajantes):
 
     n = len(coords)
     # Calcula as distâncias entre todas as coordenadas
-    distancias = [[distance_between_two_points(coords[i], coords[j]) for j in range(n)] for i in range(n)]
+    distancias = [[distance_between_two_points_1(coords[i], coords[j]) for j in range(n)] for i in range(n)]
 
     memo = {}  # Dicionário para memoização dos resultados
 
@@ -76,6 +75,21 @@ def n_tsp(coords, num_viajantes):
         rotas.append(rota)  # Adiciona a rota à lista de rotas
 
     return rotas
+
+
+# Função para calcular a distância euclidiana entre dois pontos
+def distance_between_two_points_1(p1, p2):
+    return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
+
+
+# Função para calcular a distância euclidiana entre dois pontos
+def distance_between_two_points_2(p1, p2):
+    return math.dist(p1, p2)
+
+
+# Função para calcular a distância euclidiana entre dois pontos
+def distance_between_two_points_3(p1, p2):
+    return np.linalg.norm(np.array(p2) - np.array(p1))
 
 
 # Função para gerar coordenadas aleatórias dentro de um intervalo definido
@@ -135,9 +149,9 @@ def plot_tsp(coords, routes):
 
 # Execução de um teste para o algoritmo n-tsp
 def run_tests():
+    num_cities = 10
     min = 0
     max = 100
-    num_cities = 10
     total = 0
 
     # Gerar coordenadas aleatórias dentro do intervalo definido
@@ -174,11 +188,3 @@ def run_tests():
 
     # Plotar as rotas encontradas
     # plot_tsp(coordinates, tour)
-
-
-def main():
-    run_tests()
-
-
-if __name__ == "__main__":
-    main()
