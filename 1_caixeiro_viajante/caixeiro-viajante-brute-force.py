@@ -10,12 +10,21 @@ def distance_between_two_points(p1, p2):
     return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
 
 
-def generate_random_coordinates_within_defined_interval(min, max, n_cities):
-    if n_cities < 2 or n_cities > 10:
-        raise ValueError("O numero de cidades deve ser entre 2 e 10.")
+def generate_random_coordinates(min, max, n_cities):
+    # Verificar se o número de cidades é pelo menos 2
+    if n_cities < 2:
+        raise ValueError("The number of cities must be at least 2")
 
-    coordinates = []
-    for i in range(n_cities):
+    # Verificar se o valor mínimo é maior que o valor máximo
+    if min >= max:
+        raise ValueError("The minimum value must be less than the maximum value")
+
+    # Verifica se o numero de cidades é maior que o o quadrado da diferença entre o valor máximo e mínimo
+    if n_cities > (max - min) ** 2:
+        raise ValueError("The number of cities is too large for the given interval")
+
+    coordinates = [(0, 0)]  # A primeira coordenada é (0,0)
+    for i in range(n_cities - 1):  # Gera n_cities - 1 coordenadas aleatórias
         x = random.randint(min, max)
         y = random.randint(min, max)
         coordinates.append((x, y))
@@ -54,10 +63,11 @@ def plot_tsp_solution(coordinates, tour):
 
 def test_brute_force_traveling_salesman():
     min = 0
-    max = 10
+    max = 100
+    n_cities = 10
 
-    coordenadas = generate_random_coordinates_within_defined_interval(min, max, 4)
-
+    coordenadas = generate_random_coordinates(min, max, n_cities)
+    # coordenadas = [(0, 0), (0, 2), (2, 0)]
     print(f"Coordenadas Geradas:       {coordenadas}")
     tour, distance = brute_force_traveling_salesman(coordenadas)
     print(f"Melhor tour:               {list(tour)}")
