@@ -4,6 +4,35 @@ import random
 import time
 
 
+# Essa é apenas uma ideia, precisamos pensar em alguma heurística mais sofisticada para resolver o problema
+# mas que suporte n = 90 em menos de 5 minutos de execução
+# A ideia é dividir as cidades igualmente entre os viajantes e depois distribuir as cidades restantes
+def n_tsp_simplified(coords, num_viajantes):
+    n = len(coords)
+    distancias = [[distance_between_two_points_1(coords[i], coords[j]) for j in range(n)] for i in range(n)]
+
+    # Lista de cidades a serem visitadas
+    cidades_restantes = set(range(1, n))  # Começa em 1 porque a cidade 0 é a inicial
+
+    # Inicializa as rotas dos viajantes
+    rotas = [[0] for _ in range(num_viajantes)]  # Todos os viajantes começam na cidade 0
+
+    # Distribui igualmente as cidades entre os viajantes
+    while cidades_restantes:
+        for i in range(num_viajantes):
+            if not cidades_restantes:
+                break
+            cidade_mais_proxima = min(cidades_restantes, key=lambda j: distancias[rotas[i][-1]][j])
+            rotas[i].append(cidade_mais_proxima)
+            cidades_restantes.remove(cidade_mais_proxima)
+
+    # Adiciona a cidade inicial ao final de cada rota
+    for i in range(num_viajantes):
+        rotas[i].append(0)  # Todos os viajantes retornam à cidade 0
+
+    return rotas
+
+
 def n_tsp_definitive(coords, num_viajantes):
     n = len(coords)
     distancias = [[distance_between_two_points_1(coords[i], coords[j]) for j in range(n)] for i in range(n)]
@@ -178,7 +207,7 @@ def plot_tsp(coords, routes):
 
 # Execução de um teste para o algoritmo n-tsp
 def run_tests():
-    num_cities = 10
+    num_cities = 90
     min = 0
     max = 100
     total = 0
@@ -192,7 +221,7 @@ def run_tests():
 
     # Executar o algoritmo n-tsp
     start_time = time.time()
-    tour = n_tsp_definitive(coordinates, num_travelers)
+    tour = n_tsp_simplified(coordinates, num_travelers)
     end_time = time.time()
     interval = end_time - start_time
 

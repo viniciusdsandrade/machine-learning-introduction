@@ -64,7 +64,7 @@ def held_karp_tsp(distances):
 def test_held_karp_tsp():
     min_coordinate = 0
     max_coordinate = 100
-    n_cities = 5
+    n_cities = 93
 
     # max 996! = 4.0481167966e+2555
 
