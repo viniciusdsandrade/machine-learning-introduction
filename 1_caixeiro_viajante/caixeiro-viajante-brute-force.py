@@ -1,5 +1,5 @@
+from itertools import permutations
 import matplotlib.pyplot as plt
-import itertools
 import random
 import math
 
@@ -35,7 +35,7 @@ def brute_force_traveling_salesman(coordinates):
     n_cities = len(coordinates)
     shortest_tour = None
     shortest_distance = float('inf')
-    for tour in itertools.permutations(range(n_cities)):
+    for tour in permutations(range(n_cities)):
         total_distance = sum(
             distance_between_two_points(coordinates[tour[i]], coordinates[tour[i + 1]]) for i in range(n_cities - 1))
         total_distance += distance_between_two_points(coordinates[tour[-1]],
