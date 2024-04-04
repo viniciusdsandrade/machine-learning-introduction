@@ -207,7 +207,7 @@ def plot_tsp(coords, routes):
 
 # Execução de um teste para o algoritmo n-tsp
 def run_tests():
-    num_cities = 90
+    num_cities = 10
     min = 0
     max = 100
     total = 0
