@@ -1,7 +1,21 @@
-import re
 import time
 import math
+import re
 import os
+
+
+def distance_between_two_points_1(p1, p2):
+    """
+    Calculate the Euclidean distance between two points in a 2D space.
+
+    Parameters:
+    p1 (tuple): A tuple representing the coordinates (x, y) of the first point.
+    p2 (tuple): A tuple representing the coordinates (x, y) of the second point.
+
+    Returns:
+    float: The Euclidean distance between the two points.
+    """
+    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
 
 def distance_between_two_points_2(p1, p2):
@@ -32,28 +46,51 @@ def get_coords_from_tour(tour, coords):
     return [coords[i] for i in tour]
 
 
-def n_tsp_simplified(coords, num_viajantes):
+def n_tsp_my_heuristic(coords, num_viajantes):
+    """
+    Implementa uma heurística para o problema do caixeiro viajante.
+
+    Parâmetros:
+        coords (lista): Uma lista de coordenadas das cidades. Cada coordenada é uma tupla (x, y).
+        num_viajantes (int): O número de viajantes.
+
+    Retorna:
+        rotas (lista): Uma lista de rotas para cada viajante. Cada rota é uma lista de índices das cidades.
+
+    Descrição: A função primeiro calcula a distância entre todas as cidades e as ordena da mais próxima à mais
+    distante da origem. Em seguida, distribui as cidades igualmente entre os viajantes, sempre respeitando a ordem
+    das cidades da mais próxima à mais distante da origem. Se houver cidades restantes, elas são distribuídas aos
+    viajantes de forma rotativa. Finalmente, cada viajante retorna à cidade de origem.
+    """
     n = len(coords)
+    # Calcula a distância entre todas as cidades
     distancias = [[distance_between_two_points_2(coords[i], coords[j]) for j in range(n)] for i in range(n)]
 
     # Lista de cidades a serem visitadas
-    cidades_restantes = set(range(1, n))  # Começa em 1 porque a cidade 0 é a inicial
+    # Começa em 1 porque a cidade 0 é a inicial
+    cidades_restantes = list(range(1, n))
 
-    # Inicializa as rotas dos viajantes
-    rotas = [[0] for _ in range(num_viajantes)]  # Todos os viajantes começam na cidade 0
+    # Ordena as cidades restantes com base na distância até a origem
+    cidades_restantes.sort(key=lambda x: distancias[0][x])
 
-    # Distribui igualmente as cidades entre os viajantes
-    while cidades_restantes:
-        for i in range(num_viajantes):
-            if not cidades_restantes:
-                break
-            cidade_mais_proxima = min(cidades_restantes, key=lambda j: distancias[rotas[i][-1]][j])
-            rotas[i].append(cidade_mais_proxima)
-            cidades_restantes.remove(cidade_mais_proxima)
+    # Inicializa as rotas dos viajantes: Todos os viajantes começam na cidade 0
+    rotas = [[0] for _ in range(num_viajantes)]
 
-    # Adiciona a cidade inicial ao final de cada rota
+    # Distribui as cidades igualmente entre os viajantes
+    num_cidades_por_viajante = len(cidades_restantes) // num_viajantes
     for i in range(num_viajantes):
-        rotas[i].append(0)  # Todos os viajantes retornam à cidade 0
+        for _ in range(num_cidades_por_viajante):
+            rotas[i].append(cidades_restantes.pop(0))
+
+    # Se houver cidades restantes, distribui-as para os viajantes
+    i = 0
+    while cidades_restantes:
+        rotas[i % num_viajantes].append(cidades_restantes.pop(0))
+        i += 1
+
+    # Adiciona a cidade inicial ao final de cada rota: Todos os viajantes retornam à cidade 0
+    for i in range(num_viajantes):
+        rotas[i].append(0)
 
     return rotas
 
@@ -72,7 +109,7 @@ def calculate_total_distance(coords):
         """
     total_distance = 0
     for i in range(len(coords) - 1):
-        total_distance += distance_between_two_points_2(coords[i], coords[i + 1])
+        total_distance += distance_between_two_points_1(coords[i], coords[i + 1])
     return total_distance
 
 
@@ -157,7 +194,7 @@ def run_tests():
     num_cities, num_travelers = extract_info_from_filename(file_path)
 
     start_time = time.time()
-    tour = n_tsp_simplified(coordinates, num_travelers)
+    tour = n_tsp_my_heuristic(coordinates, num_travelers)
     end_time = time.time()
     interval = end_time - start_time
 
