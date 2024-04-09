@@ -256,7 +256,7 @@ def run_tests():
                          '-projeto1'
                          '-equipe1-master\\instances')
 
-    directory = mac_directory
+    directory = windows_directory
     file_path = choose_file(directory)
     coordinates = read_coordinates(file_path)
 
