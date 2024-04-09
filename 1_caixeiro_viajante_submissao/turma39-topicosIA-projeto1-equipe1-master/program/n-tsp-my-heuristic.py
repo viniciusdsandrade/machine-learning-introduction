@@ -43,10 +43,63 @@ def n_tsp_my_heuristic(coords, num_viajantes):
     Retorna:
         rotas (lista): Uma lista de rotas para cada viajante. Cada rota é uma lista de índices das cidades.
 
-    Descrição: A função primeiro calcula a distância entre todas as cidades e as ordena da mais próxima à mais
-    distante da origem. Em seguida, distribui as cidades igualmente entre os viajantes, sempre respeitando a ordem
-    das cidades da mais próxima à mais distante da origem. Se houver cidades restantes, elas são distribuídas aos
-    viajantes de forma rotativa. Finalmente, cada viajante retorna à cidade de origem.
+    Descrição:
+    A heurística determinística para o problema n-TSP funciona da seguinte maneira:
+
+    Definição da Cidade de Origem:
+        A primeira coordenada lida no arquivo é designada como a cidade de origem. Todos os carteiros
+        iniciam e terminam suas rotas nesta cidade.
+
+    Classificação das Cidades: Todas as cidades, exceto a de origem, são classificadas com base em sua distância da
+    cidade de origem. A cidade mais próxima recebe o índice 1, a segunda mais próxima recebe o índice 2, e assim por
+    diante, até a cidade mais distante, que recebe o índice n-1 onde n é o tamanho do vetor de coordenadas lido
+    anteriormente. A cidade de origem é reservada com o índice 0.
+
+    Distribuição das Cidades:
+        As cidades são distribuídas igualmente entre  os carteiros. Se o número de cidades não for divisível pelo número
+        de carteiros, as cidades restantes são distribuídas de forma circular entre eles.
+
+    Finalização das Rotas: A cidade de origem é adicionada ao final da rota de cada carteiro, indicando que todos os
+    carteiros devem retornar à cidade de origem ao concluir suas rotas.
+
+    Exemplo:
+        # Número de carteiros e cidades
+        carteiros = 3
+        cidades = 9
+
+        # Coordenadas das cidades
+        coordenadas = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8)]
+
+        # A cidade de origem é a cidade 0. As cidades são classificadas e indexadas de acordo com a sua distância da
+        cidade de origem. # A cidade 0 recebe o índice 0, a cidade 1 recebe o índice 1, a cidade 2 recebe o índice 2
+        e assim sucessivamente.
+
+        # A quantidade de cidades são distribuídas igualmente entre os carteiros.
+        # Cada carteiro recebe indices de cidades de acordo com a sua ordem de classificação.
+        # Carteiro 1: cidades 1, 2, 3
+        # Carteiro 2: cidades 4, 5, 6
+        # Carteiro 3: cidades 7, 8
+
+        # O indice da cidade de origem é adicionada ao final de cada rota.
+        rotas = [[0, 1, 2, 3, 0], [0, 4, 5, 6, 0], [0, 7, 8, 0]]
+
+        # Rotas finais para cada carteiro (Indices das cidades)
+        carteiro_1 = [0, 1, 2, 3, 0]
+        carteiro_2 = [0, 4, 5, 6, 0]
+        carteiro_3 = [0, 7, 8, 0]
+
+        # Rotas finais para cada carteiro (Coordenadas das cidades)
+        coordenadas_carteiro_1 = [(0, 0), (1, 1), (2, 2), (3, 3), (0, 0)]
+        coordenadas_carteiro_2 = [(0, 0), (4, 4), (5, 5), (6, 6), (0, 0)]
+        coordenadas_carteiro_3 = [(0, 0), (7, 7), (8, 8), (0, 0)]
+
+        # Distância percorrida por cada carteiro
+        distancia_carteiro_1 = 8.485
+        distancia_carteiro_2 = 16.9706
+        distancia_carteiro_3 = 22.6274
+
+        # Distância total percorrida
+        distancia_total = 48.0833
     """
     n = len(coords)
     # Calcula a distância entre todas as cidades
@@ -135,6 +188,15 @@ def read_coordinates(file_path):
     return coordinates
 
 
+def extract_city_count(filename):
+    # Função para extrair o número de cidades do nome do arquivo
+    match = re.search(r'(\d+)_cidades\.txt$', filename)
+    if match:
+        return int(match.group(1))
+    else:
+        return 0
+
+
 def choose_file(directory):
     """
         Permite ao usuário escolher um arquivo de um diretório.
@@ -186,9 +248,15 @@ def extract_info_from_filename(file_path):
 
 
 def run_tests():
-    directory = ('C:\\Users\\vinic\\OneDrive\\Área de '
-                 'Trabalho\\machine-learning-introduction\\1_caixeiro_viajante_submissao\\turma39-topicosIA-projeto1'
-                 '-equipe1-master\\instances')
+    mac_directory = ('/Users/u22333/Desktop/machine-learning-introduction/machine-learning-introduction'
+                     '/1_caixeiro_viajante_submissao/turma39-topicosIA-projeto1-equipe1-master/instances')
+
+    windows_directory = ('C:\\Users\\vinic\\OneDrive\\Área de '
+                         'Trabalho\\machine-learning-introduction\\1_caixeiro_viajante_submissao\\turma39-topicosIA'
+                         '-projeto1'
+                         '-equipe1-master\\instances')
+
+    directory = mac_directory
     file_path = choose_file(directory)
     coordinates = read_coordinates(file_path)
 
