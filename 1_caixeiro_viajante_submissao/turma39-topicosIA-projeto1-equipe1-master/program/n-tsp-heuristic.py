@@ -6,44 +6,30 @@ import os
 
 def distance_between_two_points_1(p1, p2):
     """
-    Calculate the Euclidean distance between two points in a 2D space.
+    Calcula a distância euclidiana entre dois pontos em um espaço 2D.
 
-    Parameters:
-    p1 (tuple): A tuple representing the coordinates (x, y) of the first point.
-    p2 (tuple): A tuple representing the coordinates (x, y) of the second point.
+    Parâmetros:
+    p1 (tupla): Uma tupla representando as coordenadas (x, y) do primeiro ponto.
+    p2 (tupla): Uma tupla representando as coordenadas (x, y) do segundo ponto.
 
-    Returns:
-    float: The Euclidean distance between the two points.
+    Retorna:
+    float: A distância euclidiana entre os dois pontos.
     """
     return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
 
 def distance_between_two_points_2(p1, p2):
     """
-    Calculate the Euclidean distance between two points in a 2D space.
+    Calcula a distância euclidiana entre dois pontos em um espaço 2D.
 
-    Parameters:
-    p1 (tuple): A tuple representing the coordinates (x, y) of the first point.
-    p2 (tuple): A tuple representing the coordinates (x, y) of the second point.
+    Parâmetros:
+    p1 (tupla): Uma tupla representando as coordenadas (x, y) do primeiro ponto.
+    p2 (tupla): Uma tupla representando as coordenadas (x, y) do segundo ponto.
 
-    Returns:
-    float: The Euclidean distance between the two points.
+    Retorna:
+    float: A distância euclidiana entre os dois pontos.
     """
     return math.dist(p1, p2)
-
-
-def get_coords_from_tour(tour, coords):
-    """
-    Get the coordinates for each city in the tour.
-
-    Parameters:
-    tour (list): A list of city indices representing the tour.
-    coords (list): A list of tuples where each tuple represents the coordinates (x, y) of a city.
-
-    Returns:
-    list: A list of tuples where each tuple represents the coordinates (x, y) of a city in the tour.
-    """
-    return [coords[i] for i in tour]
 
 
 def n_tsp_my_heuristic(coords, num_viajantes):
@@ -95,18 +81,32 @@ def n_tsp_my_heuristic(coords, num_viajantes):
     return rotas
 
 
+def get_coords_from_tour(tour, coords):
+    """
+    Obtém as coordenadas de cada cidade no tour.
+
+    Parâmetros:
+    tour (lista): Uma lista de índices de cidades representando o tour.
+    coords (lista): Uma lista de tuplas onde cada tupla representa as coordenadas (x, y) de uma cidade.
+
+    Retorna:
+    lista: Uma lista de tuplas onde cada tupla representa as coordenadas (x, y) de uma cidade no tour.
+    """
+    return [coords[i] for i in tour]
+
+
 def calculate_total_distance(coords):
     """
-        Calculate the total Euclidean distance of a tour.
+        Calcula a distância euclidiana total de um percurso.
 
-        This function calculates the sum of the Euclidean distances between each pair of consecutive points in the tour.
+        Esta função calcula a soma das distâncias euclidianas entre cada par de pontos consecutivos no percurso.
 
-        Parameters:
-        coords (list): A list of tuples where each tuple represents the coordinates (x, y) of a point in the tour.
+        Parâmetros:
+        coords (lista): Uma lista de tuplas onde cada tupla representa as coordenadas (x, y) de um ponto no percurso.
 
-        Returns:
-        float: The total Euclidean distance of the tour.
-        """
+        Retorna:
+        float: A distância euclidiana total do percurso.
+    """
     total_distance = 0
     for i in range(len(coords) - 1):
         total_distance += distance_between_two_points_1(coords[i], coords[i + 1])
@@ -115,16 +115,16 @@ def calculate_total_distance(coords):
 
 def read_coordinates(file_path):
     """
-        Read coordinates from a file.
+        Lê coordenadas de um arquivo.
 
-        This function reads a file where each line contains an index and the x and y coordinates of a point,
-        separated by spaces. It returns a list of tuples where each tuple represents the coordinates of a point.
+        Esta função lê um arquivo onde cada linha contém um índice e as coordenadas x e y de um ponto,
+        separados por espaços. Retorna uma lista de tuplas onde cada tupla representa as coordenadas de um ponto.
 
-        Parameters:
-        file_path (str): The path to the file.
+        Parâmetros:
+        caminho_arquivo (str): O caminho para o arquivo.
 
-        Returns:
-        list: A list of tuples where each tuple represents the coordinates (x, y) of a point.
+        Retorna:
+        lista: Uma lista de tuplas onde cada tupla representa as coordenadas (x, y) de um ponto.
         """
     coordinates = []
     with open(file_path, 'r') as file:
@@ -137,16 +137,16 @@ def read_coordinates(file_path):
 
 def choose_file(directory):
     """
-        Let the user choose a file from a directory.
+        Permite ao usuário escolher um arquivo de um diretório.
 
-        This function lists all files in a directory and asks the user to choose one by typing its index. It keeps
-        asking until the user types a valid index.
+        Esta função lista todos os arquivos em um diretório e pede ao usuário para escolher um digitando seu índice.
+        Continua perguntando até que o usuário digite um índice válido.
 
-        Parameters:
-        directory (str): The path to the directory.
+        Parâmetros:
+        diretorio (str): O caminho para o diretório.
 
-        Returns:
-        str: The path to the chosen file.
+        Retorna:
+        str: O caminho para o arquivo escolhido.
         """
     files = os.listdir(directory)
     while True:
@@ -164,16 +164,17 @@ def choose_file(directory):
 
 def extract_info_from_filename(file_path):
     """
-        Extract information from a filename.
+        Extrai informações de um nome de arquivo.
 
-        This function extracts the number of cities and the number of travelers from a filename with the format
-        'mTSP-n<num_cities>-m<num_travelers>'. It raises a ValueError if the filename is not in the expected format.
+        Esta função extrai o número de cidades e o número de viajantes de um nome de arquivo com o formato
+        'mTSP-n<num_cidades>-m<num_viajantes>'. Levanta um ValueError se o nome do arquivo não estiver no formato
+        esperado.
 
-        Parameters:
-        file_path (str): The path to the file.
+        Parâmetros:
+        caminho_arquivo (str): O caminho para o arquivo.
 
-        Returns:
-        tuple: A tuple containing the number of cities and the number of travelers.
+        Retorna:
+        tupla: Uma tupla contendo o número de cidades e o número de viajantes.
         """
     filename = os.path.basename(file_path)
     match = re.match(r'mTSP-n(\d+)-m(\d+)', filename)
