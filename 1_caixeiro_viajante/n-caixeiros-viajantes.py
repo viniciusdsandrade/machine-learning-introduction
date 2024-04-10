@@ -4,35 +4,6 @@ import random
 import time
 
 
-# Essa é apenas uma ideia, precisamos pensar em alguma heurística mais sofisticada para resolver o problema
-# mas que suporte n = 90 em menos de 5 minutos de execução
-# A ideia é dividir as cidades igualmente entre os viajantes e depois distribuir as cidades restantes
-def n_tsp_simplified(coords, num_viajantes):
-    n = len(coords)
-    distancias = [[distance_between_two_points_1(coords[i], coords[j]) for j in range(n)] for i in range(n)]
-
-    # Lista de cidades a serem visitadas
-    cidades_restantes = set(range(1, n))  # Começa em 1 porque a cidade 0 é a inicial
-
-    # Inicializa as rotas dos viajantes
-    rotas = [[0] for _ in range(num_viajantes)]  # Todos os viajantes começam na cidade 0
-
-    # Distribui igualmente as cidades entre os viajantes
-    while cidades_restantes:
-        for i in range(num_viajantes):
-            if not cidades_restantes:
-                break
-            cidade_mais_proxima = min(cidades_restantes, key=lambda j: distancias[rotas[i][-1]][j])
-            rotas[i].append(cidade_mais_proxima)
-            cidades_restantes.remove(cidade_mais_proxima)
-
-    # Adiciona a cidade inicial ao final de cada rota
-    for i in range(num_viajantes):
-        rotas[i].append(0)  # Todos os viajantes retornam à cidade 0
-
-    return rotas
-
-
 def n_tsp_definitive(coords, num_viajantes):
     n = len(coords)
     distancias = [[distance_between_two_points_1(coords[i], coords[j]) for j in range(n)] for i in range(n)]
@@ -209,19 +180,31 @@ def plot_tsp(coords, routes):
 def run_tests():
     num_cities = 10
     min = 0
-    max = 100
+    max = 1000
     total = 0
 
+    m_tsp_n13_m1 = [(500, 500), (708, 500), (707, 977), (43, 228), (140, 11), (899, 625), (389, 990), (205, 603),
+                    (878, 977), (24, 237), (218, 557), (362, 217), (504, 939)]
+
+    m_tsp_n17_m1 = [(500, 500), (183, 839), (523, 535), (574, 132), (673, 31), (974, 852), (217, 980), (912, 345),
+                    (917, 254), (315, 907), (50, 134), (299, 520), (505, 971), (894, 490), (833, 547), (273, 831),
+                    (726, 720)]
+
+    m_tsp_n19_m1 = [(500, 500), (55, 163), (186, 445), (778, 8), (622, 988), (933, 369), (895, 850), (42, 693),
+                    (111, 234), (523, 58), (467, 290), (631, 773), (69, 14), (899, 759), (816, 374), (98, 420),
+                    (799, 392), (335, 375), (467, 116)]
+
     # Gerar coordenadas aleatórias dentro do intervalo definido
-    coordinates = generate_random_coordinates(min, max, num_cities)
+    coordinates = m_tsp_n19_m1
+    # coordinates = generate_random_coordinates(min, max, num_cities)
     # coordinates = [(0, 0), (0, 2), (2, 0), (2, 2), (1, 1), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9)]
 
     # Número de viajantes
-    num_travelers = 2
+    num_travelers = 1
 
     # Executar o algoritmo n-tsp
     start_time = time.time()
-    tour = n_tsp_simplified(coordinates, num_travelers)
+    tour = n_tsp_definitive(coordinates, num_travelers)
     end_time = time.time()
     interval = end_time - start_time
 

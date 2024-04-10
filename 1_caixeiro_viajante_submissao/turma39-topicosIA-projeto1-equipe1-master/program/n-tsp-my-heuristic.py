@@ -57,7 +57,7 @@ def n_tsp_my_heuristic(coords, num_viajantes):
 
     Distribuição das Cidades:
         As cidades são distribuídas igualmente entre  os carteiros. Se o número de cidades não for divisível pelo número
-        de carteiros, as cidades restantes são distribuídas de forma circular entre eles.
+        de carteiros, as cidades resistances são distribuídas de forma circular entre eles.
 
     Finalização das Rotas: A cidade de origem é adicionada ao final da rota de cada carteiro, indicando que todos os
     carteiros devem retornar à cidade de origem ao concluir suas rotas.
@@ -251,12 +251,15 @@ def run_tests():
     mac_directory = ('/Users/u22333/Desktop/machine-learning-introduction/machine-learning-introduction'
                      '/1_caixeiro_viajante_submissao/turma39-topicosIA-projeto1-equipe1-master/instances')
 
-    windows_directory = ('C:\\Users\\vinic\\OneDrive\\Área de '
-                         'Trabalho\\machine-learning-introduction\\1_caixeiro_viajante_submissao\\turma39-topicosIA'
-                         '-projeto1'
-                         '-equipe1-master\\instances')
+    laptop_directory = ('C:\\Users\\vinic\\OneDrive\\Área de '
+                        'Trabalho\\machine-learning-introduction\\1_caixeiro_viajante_submissao\\turma39-topicosIA'
+                        '-projeto1-equipe1-master\\instances')
 
-    directory = windows_directory
+    desktop_directory = ('C:\\Users\\Pichau\\Desktop\\machine-learning-introduction\\machine-learning'
+                         '-introduction\\1_caixeiro_viajante_submissao\\turma39-topicosIA-projeto1-equipe1'
+                         '-master\\instances')
+
+    directory = desktop_directory
     file_path = choose_file(directory)
     coordinates = read_coordinates(file_path)
 
