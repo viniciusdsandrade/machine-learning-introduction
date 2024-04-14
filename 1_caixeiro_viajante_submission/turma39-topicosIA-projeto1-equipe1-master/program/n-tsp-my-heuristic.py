@@ -262,12 +262,14 @@ def run_tests():
                          '-introduction\\1_caixeiro_viajante_submission\\turma39-topicosIA-projeto1-equipe1'
                          '-master\\instances')
 
-    directory = laptop_directory
-    file_path = choose_file(directory)
-    coordinates = read_coordinates(file_path)
+    directory = laptop_directory  # Alterar para mac_directory ou desktop_directory conforme o sistema operacional
+    file_path = choose_file(directory)  # Escolher o arquivo de instância
+    coordinates = read_coordinates(file_path)  # Ler as coordenadas do arquivo
 
+    # Extrair numero de cidades e viajantes do nome do arquivo
     num_cities, num_travelers = extract_info_from_filename(file_path)
 
+    # Executa a heurística, armazena o tour e calcula o tempo de execução da função
     start_time = time.time()
     tour = n_tsp_my_heuristic(coordinates, num_travelers)
     end_time = time.time()
@@ -279,6 +281,8 @@ def run_tests():
     print(f"Indices das rotas    {tour}")
     print(f"Tempo de execução:   {interval:.6f} segundos")
 
+    # Calcula e imprime a distância total percorrida por cada viajante e a distância total percorrida por todos os
+    # viajantes
     total_distance = 0
     for i, route in enumerate(tour):
         tour_coordinates = get_coords_from_tour(route, coordinates)

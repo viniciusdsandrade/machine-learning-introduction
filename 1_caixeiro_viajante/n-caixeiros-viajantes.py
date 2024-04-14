@@ -111,18 +111,55 @@ def n_tsp_test(coords, num_viajantes):
     return rotas
 
 
-# Função para calcular a distância euclidiana entre dois pontos arrendondando para cima
 def distance_between_two_points_1(p1, p2):
-    return math.ceil(math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2))
+    """
+    Calcula a distância euclidiana entre dois pontos em um espaço 2D.
+
+    Parâmetros:
+    p1 (tupla): Uma tupla representando as coordenadas (x, y) do primeiro ponto.
+    p2 (tupla): Uma tupla representando as coordenadas (x, y) do segundo ponto.
+
+    Retorna:
+    float: A distância euclidiana entre os dois pontos.
+    """
+    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
 
-# Função para calcular a distância euclidiana entre dois pontos arredondando para cima
 def distance_between_two_points_2(p1, p2):
-    return math.ceil(math.dist(p1, p2))
+    """
+    Calcula a distância euclidiana entre dois pontos em um espaço 2D.
+
+    Parâmetros:
+    p1 (tupla): Uma tupla representando as coordenadas (x, y) do primeiro ponto.
+    p2 (tupla): Uma tupla representando as coordenadas (x, y) do segundo ponto.
+
+    Retorna:
+    float: A distância euclidiana entre os dois pontos.
+    """
+    return math.dist(p1, p2)
 
 
-# Função para gerar coordenadas aleatórias dentro de um intervalo definido
 def generate_random_coordinates(min, max, n_cities):
+    """
+    This function generates a list of random coordinates within a defined interval.
+
+    Parameters:
+    min (int): The minimum value for the x and y coordinates.
+    Max (int): The maximum value for the x and y coordinates.
+    N_cities (int): The number of cities (i.e., coordinates) to generate.
+
+    Returns:
+    list: A list of tuples, where each tuple represents the (x, y) coordinates of a city.
+
+    Raises: ValueError: If the number of cities is less than 2. ValueError: If the minimum value is greater than or
+    equal to the maximum value.
+    ValueError: If the number of cities is greater than the square of the difference
+    between the maximum and minimum values.
+
+    Example:
+    >>> generate_random_coordinates(1, 10, 5)
+    [(3, 7), (9, 2), (6, 8), (1, 4), (5, 9)]
+    """
     # Verificar se o número de cidades é pelo menos 2
     if n_cities < 2:
         raise ValueError("The number of cities must be at least 2")
@@ -143,17 +180,39 @@ def generate_random_coordinates(min, max, n_cities):
     return coordinates
 
 
-# Função para calcular a distância de uma lista de coordenadas que representam as  localizações das cidades
-# (tour) em ordem. Não considera a distancia da ultima cidade para o inicio pois o tsp já faz isso
 def calculate_total_distance(coords):
+    """
+    This function calculates the total Euclidean distance of a route.
+
+    This function calculates the sum of the Euclidean distances between each pair of consecutive points on the route.
+
+    Parameters:
+    coords (list): A list of tuples where each tuple represents the coordinates (x, y) of a point on the route.
+
+    Returns:
+    float: The total Euclidean distance of the route.
+
+    Example:
+    >>> calculate_total_distance([(0, 0), (1, 1), (2, 2), (0, 0)])
+    5.656854249492381
+    """
     total_distance = 0
     for i in range(len(coords) - 1):
-        total_distance += distance_between_two_points_2(coords[i], coords[i + 1])
+        total_distance += distance_between_two_points_1(coords[i], coords[i + 1])
     return total_distance
 
 
-# Função que retorna as coordenadas das cidades a partir de uma lista de índices de cidades de um tour
 def get_coords_from_tour(tour, coords):
+    """
+    Obtém as coordenadas de cada cidade no tour.
+
+    Parâmetros:
+    tour (lista): Uma lista de índices de cidades representando o tour.
+    coords (lista): Uma lista de tuplas onde cada tupla representa as coordenadas (x, y) de uma cidade.
+
+    Retorna:
+    lista: Uma lista de tuplas onde cada tupla representa as coordenadas (x, y) de uma cidade no tour.
+    """
     return [coords[i] for i in tour]
 
 
@@ -199,7 +258,6 @@ def run_tests():
     # coordinates = generate_random_coordinates(min, max, num_cities)
     # coordinates = [(0, 0), (0, 2), (2, 0), (2, 2), (1, 1), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9)]
 
-    # Número de viajantes
     num_travelers = 1
 
     # Executar o algoritmo n-tsp
