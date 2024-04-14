@@ -111,14 +111,14 @@ def n_tsp_test(coords, num_viajantes):
     return rotas
 
 
-# Função para calcular a distância euclidiana entre dois pontos
+# Função para calcular a distância euclidiana entre dois pontos arrendondando para cima
 def distance_between_two_points_1(p1, p2):
-    return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
+    return math.ceil(math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2))
 
 
-# Função para calcular a distância euclidiana entre dois pontos
+# Função para calcular a distância euclidiana entre dois pontos arredondando para cima
 def distance_between_two_points_2(p1, p2):
-    return math.dist(p1, p2)
+    return math.ceil(math.dist(p1, p2))
 
 
 # Função para gerar coordenadas aleatórias dentro de um intervalo definido
@@ -195,7 +195,7 @@ def run_tests():
                     (799, 392), (335, 375), (467, 116)]
 
     # Gerar coordenadas aleatórias dentro do intervalo definido
-    coordinates = m_tsp_n19_m1
+    coordinates = m_tsp_n13_m1
     # coordinates = generate_random_coordinates(min, max, num_cities)
     # coordinates = [(0, 0), (0, 2), (2, 0), (2, 2), (1, 1), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9)]
 

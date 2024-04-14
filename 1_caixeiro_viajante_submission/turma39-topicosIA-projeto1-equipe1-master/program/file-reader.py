@@ -75,7 +75,7 @@ def extract_info_from_filename(file_path):
 
 def test_read_coordinates():
     directory = ('C:\\Users\\vinic\\OneDrive\\Área de '
-                 'Trabalho\\machine-learning-introduction\\1_caixeiro_viajante_submissao\\turma39-topicosIA-projeto1'
+                 'Trabalho\\machine-learning-introduction\\1_caixeiro_viajante_submission\\turma39-topicosIA-projeto1'
                  '-equipe1-master\\instances')
     file_path = choose_file(directory)
     coordinates = read_coordinates(file_path)

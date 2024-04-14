@@ -44,28 +44,30 @@ def n_tsp_my_heuristic(coords, num_viajantes):
         rotas (lista): Uma lista de rotas para cada viajante. Cada rota é uma lista de índices das cidades.
 
     Descrição:
-    A heurística determinística para o problema n-TSP funciona da seguinte maneira:
+        A heurística determinística para o problema n-TSP funciona da seguinte maneira:
 
     Definição da Cidade de Origem:
         A primeira coordenada lida no arquivo é designada como a cidade de origem. Todos os carteiros
         iniciam e terminam suas rotas nesta cidade.
 
-    Classificação das Cidades: Todas as cidades, exceto a de origem, são classificadas com base em sua distância da
-    cidade de origem. A cidade mais próxima recebe o índice 1, a segunda mais próxima recebe o índice 2, e assim por
-    diante, até a cidade mais distante, que recebe o índice n-1 onde n é o tamanho do vetor de coordenadas lido
-    anteriormente. A cidade de origem é reservada com o índice 0.
+    Classificação das Cidades:
+        Todas as cidades, exceto a de origem, são classificadas com base em sua distância da
+        cidade de origem. A cidade mais próxima recebe o índice 1, a segunda mais próxima recebe o índice 2, e assim por
+        diante, até a cidade mais distante, que recebe o índice n-1 onde n é o tamanho do vetor de coordenadas lido
+        anteriormente. A cidade de origem é reservada com o índice 0.
 
     Distribuição das Cidades:
         As cidades são distribuídas igualmente entre  os carteiros. Se o número de cidades não for divisível pelo número
-        de carteiros, as cidades resistances são distribuídas de forma circular entre eles.
+        de carteiros, as cidades restantes são distribuídas de forma circular entre eles.
 
-    Finalização das Rotas: A cidade de origem é adicionada ao final da rota de cada carteiro, indicando que todos os
-    carteiros devem retornar à cidade de origem ao concluir suas rotas.
+    Finalização das Rotas:
+        A cidade de origem é adicionada ao final da rota de cada carteiro, indicando que todos os
+        carteiros devem retornar à cidade de origem ao concluir suas rotas.
 
     Exemplo:
         # Número de carteiros e cidades
         carteiros = 3
-        cidades = 9
+        cidades   = 9
 
         # Coordenadas das cidades
         coordenadas = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8)]
@@ -95,12 +97,13 @@ def n_tsp_my_heuristic(coords, num_viajantes):
 
         # Distância percorrida por cada carteiro
         distancia_carteiro_1 = 8.485
-        distancia_carteiro_2 = 16.9706
-        distancia_carteiro_3 = 22.6274
+        distancia_carteiro_2 = 16.971
+        distancia_carteiro_3 = 22.625
 
         # Distância total percorrida
         distancia_total = 48.0833
     """
+
     n = len(coords)
     # Calcula a distância entre todas as cidades
     distancias = [[distance_between_two_points_2(coords[i], coords[j]) for j in range(n)] for i in range(n)]
@@ -249,17 +252,17 @@ def extract_info_from_filename(file_path):
 
 def run_tests():
     mac_directory = ('/Users/u22333/Desktop/machine-learning-introduction/machine-learning-introduction'
-                     '/1_caixeiro_viajante_submissao/turma39-topicosIA-projeto1-equipe1-master/instances')
+                     '/1_caixeiro_viajante_submission/turma39-topicosIA-projeto1-equipe1-master/instances')
 
     laptop_directory = ('C:\\Users\\vinic\\OneDrive\\Área de '
-                        'Trabalho\\machine-learning-introduction\\1_caixeiro_viajante_submissao\\turma39-topicosIA'
+                        'Trabalho\\machine-learning-introduction\\1_caixeiro_viajante_submission\\turma39-topicosIA'
                         '-projeto1-equipe1-master\\instances')
 
     desktop_directory = ('C:\\Users\\Pichau\\Desktop\\machine-learning-introduction\\machine-learning'
-                         '-introduction\\1_caixeiro_viajante_submissao\\turma39-topicosIA-projeto1-equipe1'
+                         '-introduction\\1_caixeiro_viajante_submission\\turma39-topicosIA-projeto1-equipe1'
                          '-master\\instances')
 
-    directory = desktop_directory
+    directory = laptop_directory
     file_path = choose_file(directory)
     coordinates = read_coordinates(file_path)
 
