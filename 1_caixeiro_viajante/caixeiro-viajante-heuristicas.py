@@ -34,7 +34,7 @@ def get_total_distance(tour: list):
 
 
 # Algoritmo do vizinho mais próximo: começa na cidade 0 e,
-# em cada etapa, visita a cidade mais próxima que ainda não foi visitada.
+# em cada etapa, visita à cidade mais próxima que ainda não foi visitada.
 def nearest_neighbor_algorithm(distances, n_cities):
     tour = [0]
     unvisited_cities = list(range(1, n_cities))  # Lista com 17 elementos
@@ -48,7 +48,7 @@ def nearest_neighbor_algorithm(distances, n_cities):
 
 
 # Algoritmo do vizinho mais próximo estocástico: começa em uma cidade aleatória e,
-# em cada etapa, visita a cidade mais próxima que ainda não foi visitada.
+# em cada etapa, visita à cidade mais próxima que ainda não foi visitada.
 def nearest_neighbor_algorithm_estocastic(distances, n_cities):
     first_city = random.choice(range(n_cities))
     tour = [first_city]

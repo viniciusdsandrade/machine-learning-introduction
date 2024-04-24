@@ -57,7 +57,7 @@ def n_tsp_my_heuristic(coords, num_viajantes):
         anteriormente. A cidade de origem é reservada com o índice 0.
 
     Distribuição das Cidades:
-        As cidades são distribuídas igualmente entre  os carteiros. Se o número de cidades não for divisível pelo número
+        As cidades são distribuídas igualmente entre os carteiros. Se o número de cidades não for divisível pelo número
         de carteiros, as cidades restantes são distribuídas de forma circular entre eles.
 
     Finalização das Rotas:
@@ -67,17 +67,17 @@ def n_tsp_my_heuristic(coords, num_viajantes):
     Exemplo:
         # Número de carteiros e cidades
         carteiros = 3
-        cidades   = 9
+        cidades = 9
 
         # Coordenadas das cidades
         coordenadas = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8)]
 
-        # A cidade de origem é a cidade 0. As cidades são classificadas e indexadas de acordo com a sua distância da
+        # A cidade de origem é a cidade 0. As cidades são classificadas e indexadas conforme a sua distância da
         cidade de origem. # A cidade 0 recebe o índice 0, a cidade 1 recebe o índice 1, a cidade 2 recebe o índice 2
         e assim sucessivamente.
 
         # A quantidade de cidades são distribuídas igualmente entre os carteiros.
-        # Cada carteiro recebe indices de cidades de acordo com a sua ordem de classificação.
+        # Cada carteiro recebe indices de cidades conforme a sua ordem de classificação.
         # Carteiro 1: cidades 1, 2, 3
         # Carteiro 2: cidades 4, 5, 6
         # Carteiro 3: cidades 7, 8
@@ -298,6 +298,7 @@ def run_tests():
 
 
 def main():
+    print("Bem-vindo ao programa de resolução do problema do caixeiro viajante!")
     while True:
         run_tests()
         repeat = input("Você quer testar novamente? (s/n): ")

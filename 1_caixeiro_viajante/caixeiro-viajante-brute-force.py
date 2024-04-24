@@ -5,7 +5,7 @@ import math
 
 
 # Até n = 10 cidades (10! = 3.628.800 Três milhões Seiscentos e vinte e oito mil e oitocentos) o algoritmo de força
-# bruta é viável Quero fazer uma funcao que descubra a menor distancia entre as cidades pelo metodo de força bruta
+# bruta é viável Quero fazer uma funcao que descubra a menor distância entre as cidades pelo metodo de força bruta
 def distance_between_two_points(p1, p2):
     return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
 
@@ -19,7 +19,7 @@ def generate_random_coordinates(min, max, n_cities):
     if min >= max:
         raise ValueError("The minimum value must be less than the maximum value")
 
-    # Verifica se o numero de cidades é maior que o o quadrado da diferença entre o valor máximo e mínimo
+    # Verifica se o número de cidades é maior que o o quadrado da diferença entre o valor máximo e mínimo
     if n_cities > (max - min) ** 2:
         raise ValueError("The number of cities is too large for the given interval")
 

@@ -1,5 +1,5 @@
 # Traveling Salesman Problem
-#            Campinas  Limeira  Sumaré  Valinhos Hortolândia
+#            Campinas Limeira  Sumaré Valinhos Hortolândia
 # Campinas       0        45       23       31       13
 # Limeira       45         0       17       43       27
 # Sumaré        23        17        0       19       23
