@@ -8,10 +8,7 @@ def printar_matriz(matriz):
     for i in range(len(matriz)):
         print('[', end='')
         for j in range(len(matriz[i])):
-            # Usa str.format() para garantir que todos os elementos ocupem o mesmo espaço
-            # Alinha os números à direita removendo espaços extras à esquerda
             print("{:>{}}".format(matriz[i][j], max_len), end='')
-            # Adiciona um espaço após cada número, exceto o último da linha
             if j != len(matriz[i]) - 1:
                 print(' ', end='')
         print(']')
