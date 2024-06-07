@@ -4,44 +4,110 @@ import numpy as np
 
 
 def problema_1():
-    """Resolve o Problema 1."""
-    c = [5, 1]
-    A = [[-2, -1], [-1, -1], [-1, -5]]
-    b = [-6, -4, -10]
-    x0_bounds = (0, None)
-    x1_bounds = (0, None)
+    """
+    Min f(x1, x2) = 5x1 + x2
+
+    sujeita às seguintes restrições:
+
+    * 2x1 + x2 <= 6
+    * x1 + x2 <= 4
+    * x1 + 5x2 >= 10
+    * x1, x2 >= 0
+
+    A solução é obtida utilizando a função 'linprog' da biblioteca SciPy, que implementa o método Simplex.
+
+    :return:
+        OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
+            - x: array com os valores ótimos das variáveis x1 e x2.
+            - fun: valor ótimo da função objetivo.
+    """
+    c = [5, 1]  # Coeficientes da função objetivo
+    A = [[-2, -1], [-1, -1], [-1, -5]]  # Coeficientes das restrições (<=)
+    b = [-6, -4, -10]  # Termos independentes das restrições (<=)
+    x0_bounds = (0, None)  # Limites da variável x1 (>= 0)
+    x1_bounds = (0, None)  # Limites da variável x2 (>= 0)
+
     res = linprog(c, A_ub=A, b_ub=b, bounds=[x0_bounds, x1_bounds], method='highs')
-    print(
-        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {res.fun:.0f}.')  #
-    # Formatação da saída
+
+    print(f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {res.fun:.0f}.')
+
+    return res
 
 
 def problema_2():
-    """Resolve o Problema 2."""
-    c = [-2, 3]  # Invertido para maximização
-    A = [[1, 2], [2, -1]]
-    b = [6, 8]
-    x0_bounds = (0, None)
-    x1_bounds = (0, None)
+    """
+    Max f(x1, x2) = 2x1 + 3x2
+
+    sujeita às seguintes restrições:
+
+    * x1 + 2x2 <= 6
+    * 2x1 - x2 <= 8
+    * x1, x2   >= 0
+
+    A solução é obtida utilizando a função 'linprog' da biblioteca SciPy, que implementa o método Simplex. Como a função 'linprog' é projetada para minimização, a função objetivo é multiplicada por -1 para transformar o problema de maximização em um problema de minimização equivalente.
+
+    :return:
+        OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
+            - x: array com os valores ótimos das variáveis x1 e x2.
+            - fun: valor ótimo da função objetivo (multiplicado por -1 para obter o valor máximo original).
+    """
+    c = [-2, -3]  # Coeficientes da função objetivo (invertidos para maximização)
+    A = [[1, 2], [2, -1]]  # Coeficientes das restrições (<=)
+    b = [6, 8]  # Termos independentes das restrições (<=)
+    x0_bounds = (0, None)  # Limites da variável x1 (>= 0)
+    x1_bounds = (0, None)  # Limites da variável x2 (>= 0)
+
     res = linprog(c, A_ub=A, b_ub=b, bounds=[x0_bounds, x1_bounds], method='highs')
+
     print(
-        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {-res.fun:.0f}.')  #
-    # Formatação da saída e inversão do sinal
+        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {-res.fun:.0f}.')  # Inverte o sinal de res.fun para obter o valor máximo original
+
+    return res
 
 
 def problema_3():
-    """Resolve o Problema 3."""
-    c = [-15, -41, 11]
-    A = [[-2, -1, -1]]
-    b = [-3]
-    x_bounds = [(0, 1), (0, 1), (0, 1)]
+    """
+    Max f(x1, x2, x3) =  15(x1 + 2x2) + 11(x2 -x3)
+
+    sujeita as seguintes restrições:
+
+    * 3x1 >=x1 +x2 + x3
+    * 0 <= xj <= 1, j = 1, 2, 3
+
+    A solução ótima deste problema é x∗ = (1, 1, 0) com f(x∗) = 56.
+    :return:
+        OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
+            - x: array com os valores ótimos das variáveis x1, x2 e x3.
+            - fun: valor ótimo da função objetivo.
+    """
+    c = [-15, -41, 11]  # Coeficientes da função objetivo (a serem minimizados)
+    A = [[-2, -1, -1]]  # Coeficientes das restrições de desigualdade
+    b = [-3]  # Termos independentes das restrições de desigualdade
+    x_bounds = [(0, 1), (0, 1), (0, 1)]  # Limites das variáveis (entre 0 e 1)
+
     res = linprog(c, A_ub=A, b_ub=b, bounds=x_bounds, method='highs')
+
     print(
         f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {-res.fun:.0f}.')
 
 
 def problema_4():
-    """Resolve o Problema 4."""
+    """
+    Min f(x1, x2, x3, x4) = 10(x3 + x4)
+
+    sujeita às seguintes restrições:
+
+    * ∑xj = 400 de 1 a 4
+    * xj − 2xj+1 ≥ 0, j = 1, 2, 3
+    * xj ≥ 0, j = 1, 2, 3, 4
+
+    A solução ótima deste problema é x∗ = (400, 0, 0, 0) com f(x∗) = 0.
+
+    :return:
+        OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
+            - x: array com os valores ótimos das variáveis x1, x2, x3 e x4.
+            - fun: valor ótimo da função objetivo.
+    """
     c = [0, 0, 10, 10]
     A_ub = [
         [-1, 2, 0, 0],
@@ -54,11 +120,27 @@ def problema_4():
     bounds = [(0, None), (0, None), (0, None), (0, None)]
     res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=bounds)
     print(
-        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}, {res.x[3]:.0f}) com f(x∗) = {res.fun:.0f}.')
+        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}, {res.x[3]:.0f}) com '
+        f'f(x∗) = {res.fun:.0f}.')
 
 
 def problema_5():
-    """Resolve o Problema 5."""
+    """
+     Max f(x1, x2, x3) = -5x1 + 3(x1 + x3) - 2x2
+
+    sujeita às seguintes restrições:
+
+    * xj + 1 <= xj+1 -> j = 1, 2
+    * ∑xj = 12 de 1 a 3  -> j = 1, 2, 3
+    * xj >= 0 -> j = 1, 2, 3
+
+    A solução ótima deste problema é x∗ = (0, 1, 11) com f(x∗) = 36.
+
+    :return:
+        OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
+            - x: array com os valores ótimos das variáveis x1, x2 e x3.
+            - fun: valor ótimo da função objetivo.
+    """
     c = [2, 0, -3]  # Invertido para maximização
     A_ub = [[1, -1, 0], [0, 1, -1]]
     b_ub = [-1, -1]
@@ -75,7 +157,21 @@ def problema_6():
 
 
 def problema_7():
-    """Resolve o Problema 7."""
+    """
+    Maximizar f(x) = 9x1 + 5x2
+
+    sujeito a:
+    * sin(k/13)x1 + cos(k/13)x2 <= 7, k = 1, 2, ..., 13
+    * x1, x2 >= 0
+
+    A solução ótima deste problema é x∗ = (0, 1, 11) com f(x∗) = 36.
+
+    :return:
+        OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
+            - x: array com os valores ótimos das variáveis x1 e x2.
+            - fun: valor ótimo da função objetivo.
+    """
+
     c = [-9, -5, 0]
     A_ub = np.array([[sin(k / 13), cos(k / 13), 0] for k in range(1, 14)])
     b_ub = np.array([7] * 13)
