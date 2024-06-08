@@ -33,6 +33,7 @@ def problema_1():
         b_ub=b,
         bounds=[x0_bounds, x1_bounds],
         method='highs',
+        options={'disp': False}
     )
 
     print(f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {res.fun:.0f}.')
@@ -65,7 +66,8 @@ def problema_2():
         A_ub=A,
         b_ub=b,
         bounds=[x0_bounds, x1_bounds],
-        method='highs'
+        method='highs',
+        options={'disp': False}
     )
 
     print(
@@ -80,7 +82,7 @@ def problema_2():
 
 def problema_3():
     """
-    Max f(x1, x2, x3) = 15(x1 + 2x2) + 11(x2 -x3)
+    Max f(x1, x2, x3) = 15(x1 + 2x2) + 11(x2 - x3)
 
     sujeita as seguintes restrições:
 
@@ -98,10 +100,17 @@ def problema_3():
     b = [-3]  # Termos independentes das restrições de desigualdade
     x_bounds = [(0, 1), (0, 1), (0, 1)]  # Limites das variáveis (entre 0 e 1)
 
-    res = linprog(c, A_ub=A, b_ub=b, bounds=x_bounds, method='highs')
+    res = linprog(
+        c, A_ub=A,
+        b_ub=b,
+        bounds=x_bounds,
+        method='highs',
+        options={'disp': False}
+    )
 
     print(
-        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {-res.fun:.0f}.')
+        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {-res.fun:.0f}.'
+    )
 
     plot_2d_problema_3(res)
     return res
@@ -154,7 +163,7 @@ def problema_4():
 
 def problema_5():
     """
-     Max f(x1, x2, x3) = -5x1 + 3(x1 + x3) - 2x2
+    Max f(x1, x2, x3) = -5x1 + 3(x1 + x3) + 3x2
 
     sujeita às seguintes restrições:
 
@@ -169,13 +178,29 @@ def problema_5():
             - x: array com os valores ótimos das variáveis x1, x2 e x3.
             - fun: valor ótimo da função objetivo.
     """
-    from scipy.optimize import linprog
-    c = [2, 0, -3]  # Invertido para maximização
-    A_ub = [[1, -1, 0], [0, 1, -1]]  # Coeficientes das restrições de desigualdade
-    b_ub = [-1, -1]  # Termos independentes das restrições de desigualdade
-    A_eq = [[1, 1, 1]]  # Coeficientes das restrições de igualdade
-    b_eq = [12]  # Termos independentes das restrições de igualdade
-    bounds = [(0, None), (0, None), (0, None)]  # Limites das variáveis (>= 0)
+
+    # Coeficientes da função objetivo (invertidos para maximização)
+    c = [2, -3, -3]
+
+    # Coeficientes das restrições de desigualdade
+    A_ub = [
+        [1, -1, 0],
+        [0, 1, -1]
+    ]
+
+    b_ub = [-1, -1]
+
+    # Coeficientes das restrições de igualdade
+    A_eq = [
+        [1, 1, 1]
+    ]
+
+    b_eq = [12]
+
+    # Limites das variáveis
+    bounds = [(0, None), (0, None), (0, None)]
+
+    # Resolver o problema
     res = linprog(
         c,
         A_ub=A_ub,
@@ -186,12 +211,21 @@ def problema_5():
         method='highs',
         options={'disp': False}
     )
-    print(
-        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {res.fun:.0f}.'
-    )
 
-    plot_3d_problema_5(res)
-    plot_2d_problema_5(res)
+    if res.success:
+        x_opt = res.x
+        f_opt = -res.fun  # Maximizar então multiplicamos a função objetivo por -1 para o resultado final
+
+        print(
+            f"A solução ótima deste problema é x* = ({x_opt[0]:.0f}, {x_opt[1]:.0f}, {x_opt[2]:.0f}) com f(x*) = {f_opt:.2f}."
+        )
+
+        plot_3d_problema_5(res)
+        plot_2d_problema_5(res)
+    else:
+        print("O problema de otimização não encontrou uma solução viável.")
+
+    return res
 
 
 def problema_6():

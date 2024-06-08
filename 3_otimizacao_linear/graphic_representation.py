@@ -41,7 +41,7 @@ def plot_2d_problema_1(res):
 
     # Adiciona as linhas das restrições com formatação
     for restricao in restricoes:
-        x1 = np.linspace(x1_range[0], x1_range[1], 100)
+        x1 = np.linspace(x1_range[0], x1_range[1], 500)
         x2 = eval(restricao)
         fig.add_trace(go.Scatter(x=x1, y=x2, mode='lines', name=restricao, line=dict(width=2)))
 
@@ -473,54 +473,30 @@ def plot_2d_problema_5(res):
     """
     Plota uma representação 2D simplificada do Problema 5.
 
-    Esta função cria um gráfico interativo em duas dimensões (2D) utilizando a biblioteca Plotly.
-    O gráfico exibe uma visualização simplificada do Problema 5, fixando a variável x3 em 0.
-    A região viável aproximada e a solução ótima projetada no plano x1-x2 são mostradas.
-
     :arg:
         res: Um objeto 'OptimizeResult' retornado pela função 'linprog', contendo a solução ótima do problema.
-
-    Funcionalidades:
-        - Define os intervalos dos eixos x1 e x2 para abranger a região de interesse do problema.
-        - Determina as restrições relevantes para a visualização 2D com x3 = 0.
-        - Cria um gráfico Plotly e adiciona as retas que representam as restrições simplificadas.
-        - Plota a solução ótima projetada (com x3 = 0) como um ponto destacado em vermelho.
-        - Preenche uma região aproximada da região viável com uma cor clara para facilitar a visualização.
-        - Configura os rótulos dos eixos e o título do gráfico para melhor identificação.
-        - Exibe o gráfico interativo, permitindo zoom, pan e outras interações.
-
-    :return:
-        None (exibe o gráfico diretamente).
-
-    Observações:
-        - A função assume que o resultado da otimização ('res') foi obtido para o Problema 5.
-        - A função utiliza a biblioteca Plotly para criar o gráfico interativo, que oferece recursos
-          avançados de visualização.
-        - A região viável exibida é uma aproximação, pois não considera todas as restrições do problema original.
-        - A solução ótima projetada é o ponto no plano x1-x2 que corresponde à solução ótima do problema
-          original, com a variável x3 fixada em 0.
     """
     fig = go.Figure()
 
     # Gerando pontos para as retas
     x1 = np.linspace(0, 12, 100)
-    x2 = np.linspace(0, 12, 100)
 
     # Restrição: x1 + 1 ≤ x2
     x2_rest1 = x1 + 1
+
     # Restrição: x1 + x2 ≤ 12 (considerando x3 = 0)
     x2_rest2 = 12 - x1
 
     # Plotando as restrições
-    fig.add_trace(go.Scatter(x=x1, y=x2_rest1, mode='lines', name='x1 + 1 <= x2'))
-    fig.add_trace(go.Scatter(x=x1, y=x2_rest2, mode='lines', name='x1 + x2 <= 12 (x3=0)'))
+    fig.add_trace(go.Scatter(x=x1, y=x2_rest1, mode='lines', name='x1 + 1 ≤ x2'))
+    fig.add_trace(go.Scatter(x=x1, y=x2_rest2, mode='lines', name='x1 + x2 ≤ 12 (x3=0)'))
 
-    # Região Viável
+    # Região Viável (aproximada)
     fig.add_trace(go.Scatter(x=[0, 11, 12, 0], y=[1, 0, 12, 1], fill="toself",
                              fillcolor="lightgray", line=dict(color="black"),
                              name='Região Viável (aproximada)'))
 
-    # Solução Ótima Projetada (x3=0)
+    # Solução Ótima Projetada (com x3 = 0)
     fig.add_trace(go.Scatter(x=[res.x[0]], y=[res.x[1]], mode='markers',
                              marker=dict(size=10, color='red'), name='Solução Ótima Projetada'))
 
@@ -536,54 +512,29 @@ def plot_3d_problema_5(res):
     """
     Plota a região factível, a solução ótima e as restrições do Problema 5 em 3D.
 
-    Esta função cria um gráfico interativo em três dimensões (3D) utilizando a biblioteca Plotly.
-    O gráfico exibe a região factível do Problema 5, definida pelas restrições, e destaca a solução
-    ótima encontrada pela função 'linprog'.
-
     :arg:
         res: Um objeto 'OptimizeResult' retornado pela função 'linprog', contendo a solução ótima do problema.
-
-    Funcionalidades:
-        - Define os intervalos dos eixos x1, x2 e x3 para abranger a região de interesse do problema.
-        - Determina as restrições do Problema 5 e as converte em equações para plotagem em 3D.
-        - Cria um gráfico Plotly 3D e adiciona os planos que representam as restrições do problema.
-        - Plota a solução ótima como um ponto destacado em vermelho.
-        - Configura os rótulos dos eixos e o título do gráfico para melhor identificação.
-        - Exibe o gráfico interativo, permitindo rotações, zoom e outras interações.
-
-    :return:
-        None (exibe o gráfico diretamente).
-
-    Observações:
-        - A função assume que o resultado da otimização ('res') foi obtido para o Problema 5.
-        - A função utiliza a biblioteca Plotly para criar o gráfico interativo 3D, que oferece recursos
-          avançados de visualização.
-        - As restrições do problema são representadas por planos no gráfico 3D.
-        - A região factível é a área do gráfico que satisfaz todas as restrições simultaneamente.
-        - A solução ótima é o ponto na região factível que maximiza a função objetivo (não plotada neste gráfico).
     """
     fig = go.Figure()
 
     # Gerando pontos para os planos
-    num_points = 10
-    x1 = np.linspace(0, 12, num_points)
-    x2 = np.linspace(0, 12, num_points)
-    x3 = np.linspace(0, 12, num_points)
-    X1, X2, X3 = np.meshgrid(x1, x2, x3)
+    x1 = np.linspace(0, 12, 100)
+    x2 = np.linspace(0, 12, 100)
+    X1, X2 = np.meshgrid(x1, x2)
 
-    # Restrição 1: x1 + 1 ≤ x2  ≥  x2 - x1 >= 1
-    Z1 = X2 - X1 - 1
+    # Restrição 1: x1 + 1 ≤ x2 → x2 >= x1 + 1
+    Z1 = X1 + 1
 
-    # Restrição 2: x2 + 1 ≤ x3  ≥  x3 - x2 >= 1
-    Z2 = X3 - X2 - 1
+    # Restrição 2: x2 + 1 ≤ x3 → x3 >= x2 + 1
+    Z2 = X2 + 1
 
-    # Restrição 3: x1 + x2 + x3 = 12
+    # Restrição 3: x1 + x2 + x3 = 12 -> x3 = 12 - x1 - x2
     Z3 = 12 - X1 - X2
 
     # Plotando os planos das restrições
-    fig.add_trace(go.Surface(x=X1, y=X2, z=Z1, opacity=0.5, showscale=False, name='x2 - x1 >= 1'))
-    fig.add_trace(go.Surface(x=X1, y=X2, z=Z2, opacity=0.5, showscale=False, name='x3 - x2 >= 1'))
-    fig.add_trace(go.Surface(x=X1, y=X2, z=Z3, opacity=0.5, showscale=False, name='x1 + x2 + x3 = 12'))
+    fig.add_trace(go.Surface(x=X1, y=X2, z=Z1, opacity=0.5, showscale=False, name='x2 >= x1 + 1'))
+    fig.add_trace(go.Surface(x=X1, y=X2, z=Z2, opacity=0.5, showscale=False, name='x3 >= x2 + 1'))
+    fig.add_trace(go.Surface(x=X1, y=X2, z=Z3, opacity=0.5, showscale=False, name='x3 = 12 - x1 - x2'))
 
     # Solução Ótima
     fig.add_trace(go.Scatter3d(x=[res.x[0]], y=[res.x[1]], z=[res.x[2]], mode='markers',
@@ -597,5 +548,4 @@ def plot_3d_problema_5(res):
         ),
         title="Problema 5 - Visualização 3D"
     )
-
     fig.show()
