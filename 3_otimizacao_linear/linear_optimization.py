@@ -1,4 +1,5 @@
 import numpy as np
+import plotly.graph_objects as go
 from scipy.optimize import linprog
 
 
@@ -12,19 +13,12 @@ def problema_1():
     * x1 + x2  <= 4
     * x1 + 5x2 >= 10
     * x1, x2   >= 0
-
-    A solução é obtida utilizando a função 'linprog' da biblioteca SciPy, que implementa o método Simplex.
-
-    :return:
-        OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
-            - x: array com os valores ótimos das variáveis x1 e x2.
-            - fun: valor ótimo da função objetivo.
     """
-    c = [5, 1]  # Coeficientes da função objetivo
-    A = [[-2, -1], [-1, -1], [-1, -5]]  # Coeficientes das restrições (<=)
-    b = [-6, -4, -10]  # Termos independentes das restrições (<=)
-    x0_bounds = (0, None)  # Limites da variável x1 (>= 0)
-    x1_bounds = (0, None)  # Limites da variável x2 (>= 0)
+    c = [5, 1]
+    A = [[-2, -1], [-1, -1], [-1, -5]]
+    b = [-6, -4, -10]
+    x0_bounds = (0, None)
+    x1_bounds = (0, None)
 
     res = linprog(
         c,
@@ -36,6 +30,13 @@ def problema_1():
 
     print(f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {res.fun:.0f}.')
 
+    # Plotagem dos gráficos 2D e 3D
+    plot_2d(res, [-1, 6], [-1, 8], ['6 - 2 * x1', '4 - x1', '(10 - x1) / 5'],
+            'Problema 1 - Região Factível e Solução Ótima (2D)')
+    plot_3d(res, [-1, 6], [-1, 8], '5 * X1 + X2',
+            {'2x1 + x2 <= 6': '6 - 2 * X1 - X2', 'x1 + x2 <= 4': '4 - X1 - X2',
+             'x1 + 5x2 >= 10': '(10 - X1 - 5 * X2) / -1'},
+            'Problema 1 - Região Factível e Solução Ótima (3D)')
     return res
 
 
@@ -48,19 +49,12 @@ def problema_2():
     * x1 + 2x2 <= 6
     * 2x1 - x2 <= 8
     * x1, x2   >= 0
-
-    A solução é obtida utilizando a função 'linprog' da biblioteca SciPy, que implementa o método Simplex. Como a função 'linprog' é projetada para minimização, a função objetivo é multiplicada por -1 para transformar o problema de maximização em um problema de minimização equivalente.
-
-    :return:
-        OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
-            - x: array com os valores ótimos das variáveis x1 e x2.
-            - fun: valor ótimo da função objetivo (multiplicado por -1 para obter o valor máximo original).
     """
-    c = [-2, 3]            # Coeficientes da função objetivo (invertidos para maximização)
-    A = [[1, 2], [2, -1]]  # Coeficientes das restrições (<=)
-    b = [6, 8]             # Termos independentes das restrições (<=)
-    x0_bounds = (0, None)  # Limites da variável x1 (>= 0)
-    x1_bounds = (0, None)  # Limites da variável x2 (>= 0)
+    c = [-2, -3]  # Coeficientes invertidos para maximização
+    A = [[1, 2], [2, -1]]
+    b = [6, 8]
+    x0_bounds = (0, None)
+    x1_bounds = (0, None)
 
     res = linprog(
         c,
@@ -71,9 +65,94 @@ def problema_2():
     )
 
     print(
-        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {-res.fun:.0f}.')  # Inverte o sinal de res.fun para obter o valor máximo original
+        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {-res.fun:.0f}.')
 
+    # Plotagem dos gráficos 2D e 3D
+    plot_2d(res, [-1, 5], [-1, 8], ['6 - x1 / 2', '2*x1 - 8'],
+            'Problema 2 - Região Factível e Solução Ótima (2D)')
+    plot_3d(res, [-1, 5], [-1, 8], '-2 * X1 + 3 * X2',  # Função objetivo invertida para visualização
+            {'x1 + 2x2 <= 6': '6 - X1 - 2 * X2', '2x1 - x2 <= 8': '2 * X1 - X2 - 8'},
+            'Problema 2 - Região Factível e Solução Ótima (3D)', 'Ponto de Máximo')
     return res
+
+
+# Função para plotar um gráfico 2D interativo
+def plot_2d(res, x1_range, x2_range, restricoes, titulo, solucao_otima_nome="Solução ótima"):
+    """
+    Plota a região factível e a solução ótima em 2D.
+    """
+    fig = go.Figure()
+
+    # Adiciona as linhas das restrições com formatação
+    for restricao in restricoes:
+        x1 = np.linspace(x1_range[0], x1_range[1], 2)
+        x2 = eval(restricao)  # Avalia a expressão da restrição para x2
+        fig.add_trace(go.Scatter(x=x1, y=x2, mode='lines', name=restricao, line=dict(width=2)))
+
+    # Plota a solução ótima com formatação
+    fig.add_trace(go.Scatter(x=[res.x[0]], y=[res.x[1]],
+                             mode='markers',
+                             marker=dict(size=12, color='red', symbol='star'),
+                             name=solucao_otima_nome))
+
+    # Define a área visível do gráfico
+    fig.update_xaxes(range=x1_range)
+    fig.update_yaxes(range=x2_range)
+
+    # Adiciona um título ao gráfico
+    fig.update_layout(
+        xaxis_title='x1',
+        yaxis_title='x2',
+        title=titulo
+    )
+    fig.show()
+
+
+# Função para plotar um gráfico 3D interativo
+def plot_3d(res, x1_range, x2_range, funcao_objetivo, restricoes_3d, titulo, solucao_otima_nome="Solução ótima"):
+    """
+    Plota a região factível, a solução ótima e a função objetivo em 3D interativo.
+    """
+    # Cria os pontos para plotar os planos das restrições
+    n = 100  # Número de pontos na grade
+    x1 = np.linspace(x1_range[0], x1_range[1], n)
+    x2 = np.linspace(x2_range[0], x2_range[1], n)
+    X1, X2 = np.meshgrid(x1, x2)
+
+    # Calcula Z para a função objetivo
+    Z_obj = eval(funcao_objetivo)
+
+    # Cria o gráfico 3D interativo
+    fig = go.Figure()
+
+    # Adiciona a superfície da função objetivo
+    fig.add_trace(go.Surface(x=X1, y=X2, z=Z_obj, name='Função Objetivo', opacity=0.5, colorscale='viridis'))
+
+    # Adiciona as superfícies das restrições
+    for nome, restricao_z in restricoes_3d.items():
+        Z = eval(restricao_z)  # Avalia a expressão da restrição para Z
+        fig.add_trace(go.Surface(x=X1, y=X2, z=Z, name=nome, opacity=0.5, showscale=False))
+
+    # Plota a solução ótima
+    fig.add_trace(go.Scatter3d(x=[res.x[0]], y=[res.x[1]], z=[res.fun],
+                               mode='markers', marker=dict(size=10, color='red'),
+                               name=solucao_otima_nome))
+
+    # Adiciona uma linha tracejada vertical da solução ótima até o plano xy
+    fig.add_trace(go.Scatter3d(x=[res.x[0], res.x[0]], y=[res.x[1], res.x[1]], z=[0, res.fun],
+                               mode='lines', line=dict(color='red', dash='dash'), showlegend=False))
+
+    # Configura o layout do gráfico
+    fig.update_layout(
+        scene=dict(
+            xaxis_title='x1',
+            yaxis_title='x2',
+            zaxis_title='f(x1, x2)',
+            camera=dict(eye=dict(x=2, y=2, z=1))  # Ajusta a visualização inicial
+        ),
+        title=titulo
+    )
+    fig.show()
 
 
 def problema_3():
@@ -107,6 +186,8 @@ def problema_3():
 
     print(
         f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {-res.fun:.0f}.')
+
+    return res
 
 
 def problema_4():
@@ -169,12 +250,12 @@ def problema_5():
             - fun: valor ótimo da função objetivo.
     """
     from scipy.optimize import linprog
-    c = [2, 0, -3]                      # Invertido para maximização
-    A_ub = [[1, -1, 0], [0, 1, -1]]     # Coeficientes das restrições de desigualdade
-    b_ub = [-1, -1]                     # Termos independentes das restrições de desigualdade
-    A_eq = [[1, 1, 1]]                   # Coeficientes das restrições de igualdade
-    b_eq = [12]                          # Termos independentes das restrições de igualdade
-    bounds = [(0, None), (0, None), (0, None)] # Limites das variáveis (>= 0)
+    c = [2, 0, -3]  # Invertido para maximização
+    A_ub = [[1, -1, 0], [0, 1, -1]]  # Coeficientes das restrições de desigualdade
+    b_ub = [-1, -1]  # Termos independentes das restrições de desigualdade
+    A_eq = [[1, 1, 1]]  # Coeficientes das restrições de igualdade
+    b_eq = [12]  # Termos independentes das restrições de igualdade
+    bounds = [(0, None), (0, None), (0, None)]  # Limites das variáveis (>= 0)
     res = linprog(
         c,
         A_ub=A_ub,
