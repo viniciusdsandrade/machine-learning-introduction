@@ -1,6 +1,5 @@
-from scipy.optimize import linprog
-from math import sin, cos
 import numpy as np
+from scipy.optimize import linprog
 
 
 def problema_1():
@@ -10,9 +9,9 @@ def problema_1():
     sujeita às seguintes restrições:
 
     * 2x1 + x2 <= 6
-    * x1 + x2 <= 4
+    * x1 + x2  <= 4
     * x1 + 5x2 >= 10
-    * x1, x2 >= 0
+    * x1, x2   >= 0
 
     A solução é obtida utilizando a função 'linprog' da biblioteca SciPy, que implementa o método Simplex.
 
@@ -27,7 +26,13 @@ def problema_1():
     x0_bounds = (0, None)  # Limites da variável x1 (>= 0)
     x1_bounds = (0, None)  # Limites da variável x2 (>= 0)
 
-    res = linprog(c, A_ub=A, b_ub=b, bounds=[x0_bounds, x1_bounds], method='highs')
+    res = linprog(
+        c,
+        A_ub=A,
+        b_ub=b,
+        bounds=[x0_bounds, x1_bounds],
+        method='highs',
+    )
 
     print(f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {res.fun:.0f}.')
 
@@ -51,13 +56,19 @@ def problema_2():
             - x: array com os valores ótimos das variáveis x1 e x2.
             - fun: valor ótimo da função objetivo (multiplicado por -1 para obter o valor máximo original).
     """
-    c = [-2, -3]  # Coeficientes da função objetivo (invertidos para maximização)
+    c = [-2, 3]            # Coeficientes da função objetivo (invertidos para maximização)
     A = [[1, 2], [2, -1]]  # Coeficientes das restrições (<=)
-    b = [6, 8]  # Termos independentes das restrições (<=)
+    b = [6, 8]             # Termos independentes das restrições (<=)
     x0_bounds = (0, None)  # Limites da variável x1 (>= 0)
     x1_bounds = (0, None)  # Limites da variável x2 (>= 0)
 
-    res = linprog(c, A_ub=A, b_ub=b, bounds=[x0_bounds, x1_bounds], method='highs')
+    res = linprog(
+        c,
+        A_ub=A,
+        b_ub=b,
+        bounds=[x0_bounds, x1_bounds],
+        method='highs'
+    )
 
     print(
         f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x∗) = {-res.fun:.0f}.')  # Inverte o sinal de res.fun para obter o valor máximo original
@@ -67,7 +78,7 @@ def problema_2():
 
 def problema_3():
     """
-    Max f(x1, x2, x3) =  15(x1 + 2x2) + 11(x2 -x3)
+    Max f(x1, x2, x3) = 15(x1 + 2x2) + 11(x2 -x3)
 
     sujeita as seguintes restrições:
 
@@ -85,7 +96,14 @@ def problema_3():
     b = [-3]  # Termos independentes das restrições de desigualdade
     x_bounds = [(0, 1), (0, 1), (0, 1)]  # Limites das variáveis (entre 0 e 1)
 
-    res = linprog(c, A_ub=A, b_ub=b, bounds=x_bounds, method='highs')
+    res = linprog(
+        c,
+        A_ub=A,
+        b_ub=b,
+        bounds=x_bounds,
+        method='highs',
+        options={'disp': False}
+    )
 
     print(
         f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {-res.fun:.0f}.')
@@ -118,7 +136,16 @@ def problema_4():
     A_eq = [[1, 1, 1, 1]]
     b_eq = [400]
     bounds = [(0, None), (0, None), (0, None), (0, None)]
-    res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=bounds)
+    res = linprog(
+        c,
+        A_ub=A_ub,
+        b_ub=b_ub,
+        A_eq=A_eq,
+        b_eq=b_eq,
+        bounds=bounds,
+        method='highs',
+        options={'disp': False}
+    )
     print(
         f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}, {res.x[3]:.0f}) com '
         f'f(x∗) = {res.fun:.0f}.')
@@ -141,15 +168,26 @@ def problema_5():
             - x: array com os valores ótimos das variáveis x1, x2 e x3.
             - fun: valor ótimo da função objetivo.
     """
-    c = [2, 0, -3]  # Invertido para maximização
-    A_ub = [[1, -1, 0], [0, 1, -1]]
-    b_ub = [-1, -1]
-    A_eq = [[1, 1, 1]]
-    b_eq = [12]
-    bounds = [(0, None), (0, None), (0, None)]
-    res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=bounds)
+    from scipy.optimize import linprog
+    c = [2, 0, -3]                      # Invertido para maximização
+    A_ub = [[1, -1, 0], [0, 1, -1]]     # Coeficientes das restrições de desigualdade
+    b_ub = [-1, -1]                     # Termos independentes das restrições de desigualdade
+    A_eq = [[1, 1, 1]]                   # Coeficientes das restrições de igualdade
+    b_eq = [12]                          # Termos independentes das restrições de igualdade
+    bounds = [(0, None), (0, None), (0, None)] # Limites das variáveis (>= 0)
+    res = linprog(
+        c,
+        A_ub=A_ub,
+        b_ub=b_ub,
+        A_eq=A_eq,
+        b_eq=b_eq,
+        bounds=bounds,
+        method='highs',
+        options={'disp': False}
+    )
     print(
-        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {-res.fun:.0f}.')  # Inverte o sinal de res.fun
+        f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {res.fun:.0f}.'
+    )
 
 
 def problema_6():
@@ -172,29 +210,35 @@ def problema_7():
             - fun: valor ótimo da função objetivo.
     """
 
-    c = [-9, -5, 0]
-    A_ub = np.array([[sin(k / 13), cos(k / 13), 0] for k in range(1, 14)])
+    # Coeficientes da função objetivo (a serem minimizados)
+    c = [-9, -5]
+
+    # Coeficientes das restrições de desigualdade
+    A_ub = np.array([[np.sin(k / 13), np.cos(k / 13)] for k in range(1, 14)])
+
+    # Termos independentes das restrições de desigualdade
     b_ub = np.array([7] * 13)
-    bounds = [(0, None), (0, None), (0, None)]
-    res = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method="highs")
+
+    # Limites inferiores das variáveis (x1, x2 >= 0)
+    bounds = [(0, None), (0, None)]
+
+    # Resolve o problema de programação linear
+    res = linprog(
+        c,
+        A_ub=A_ub,
+        b_ub=b_ub,
+        bounds=bounds,
+        method="highs",
+        options={'disp': False}
+    )
 
     if res.success:
-        print(
-            f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}) com f(x∗) = {-res.fun:.0f}.')  # Inverte o sinal de res.fun
+        print(f'A solução ótima deste problema é x∗ = ({res.x[0]:.2f}, {res.x[1]:.2f}) com f(x∗) = {-res.fun:.2f}.')
     else:
         print("Otimização falhou. Status:", res.status)
         print("Mensagem:", res.message)
 
-    # Exibe os resultados
-    if res.success:
-        print("Solução ótima encontrada:")
-        print("x1 =", res.x[0])
-        print("x2 =", res.x[1])
-        print("x3 =", res.x[2])
-        print("Valor ótimo =", -res.fun)
-    else:
-        print("Otimização falhou. Status:", res.status)
-        print("Mensagem:", res.message)
+    return res
 
 
 # Função principal para o menu
