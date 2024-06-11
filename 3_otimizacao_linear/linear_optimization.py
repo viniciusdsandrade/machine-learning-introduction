@@ -69,7 +69,7 @@ def problema_1():
     # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
     print(f'A solução ótima deste problema é x* = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x*) = {res.fun:.0f}.')
 
-    # Chama funções para plotar gráficos 2D e 3D da solução (não mostradas aqui)
+    # Chama funções para plotar gráficos 2D e 3D da solução
     plot_2d_problema_1(res)
     plot_3d_problema_1(res)
 
@@ -130,7 +130,7 @@ def problema_2():
     # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
     print(f'A solução ótima deste problema é x* = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x*) = {-res.fun:.0f}.')
 
-    # Chama funções para plotar gráficos 2D e 3D da solução (não mostradas aqui)
+    # Chama funções para plotar gráficos 2D e 3D da solução
     plot_2d_problema_2(res)
     plot_3d_problema_2(res)
 
@@ -199,21 +199,28 @@ def problema_3():
 
 def problema_4():
     """
-    Min f(x1, x2, x3, x4) = 10(x3 + x4)
+    Resolve o problema de otimização linear 4, minimizando a função objetivo 10(x3 + x4) sujeita a restrições lineares.
+
+        Min f(x1, x2, x3, x4) = 10(x3 + x4)
 
     sujeita às seguintes restrições:
 
-    * ∑xj = 400 de 1 a 4
-    * xj − 2xj+1 ≥ 0, j = 1, 2, 3
-    * xj ≥ 0, j = 1, 2, 3, 4
+        * ∑xj = 400 de 1 a 4
+        * xj − 2xj+1 ≥ 0, j = 1, 2, 3
+        * xj ≥ 0, j = 1, 2, 3, 4
 
-    A solução ótima deste problema é x∗ = (400, 0, 0, 0) com f(x∗) = 0.
+    A função formula o problema no formato padrão de programação linear, convertendo o problema de maximização
+    em um de minimização invertendo os coeficientes da função objetivo. Em seguida, utiliza o solver 'linprog'
+    da biblioteca SciPy para encontrar a solução ótima.
+
+    Por fim, plota gráficos 2D e 3D para visualizar a solução (funções não mostradas).
 
     :return:
         OptimizeResult: Objeto contendo os resultados da otimização, incluindo:
             - x: array com os valores ótimos das variáveis x1, x2, x3 e x4.
             - fun: valor ótimo da função objetivo.
     """
+
     # Coeficientes da função objetivo (a serem minimizados)
     c = [0, 0, 10, 10]  # 10x3 + 10x4
 
@@ -260,16 +267,16 @@ def problema_4():
 
 def problema_5():
     """
-    Max f(x1, x2, x3) = -5x1 + 3(x1 + x3) + 3x2
+    Resolve o Problema 5 de otimização linear, maximizando a função objetivo -5x1 + 3(x1 + x3) + 3x2
+    sujeita a restrições lineares de desigualdade e igualdade.
+
+        Max f(x1, x2, x3) = -5x1 + 3(x1 + x3) + 3x2
 
     sujeita às seguintes restrições:
 
-    * xj + 1 <= xj+1 -> j = 1, 2
-    * ∑xj = 12 de 1 a 3  -> j = 1, 2, 3
-    * xj >= 0 -> j = 1, 2, 3
-
-    Resolve o Problema 5 de otimização linear, maximizando a função objetivo -5x1 + 3(x1 + x3) + 3x2
-    sujeita a restrições lineares de desigualdade e igualdade.
+        xj + 1 <= xj+1 -> j = 1, 2
+        ∑xj = 12 de 1 a 3  -> j = 1, 2, 3
+        xj >= 0 -> j = 1, 2, 3
 
     A função formula o problema no formato padrão de programação linear, convertendo o problema de maximização
     em um de minimização invertendo os coeficientes da função objetivo. Em seguida, utiliza o solver 'linprog'
@@ -323,7 +330,7 @@ def problema_5():
             f"A solução ótima deste problema é x* = ({x_opt[0]:.0f}, {x_opt[1]:.0f}, {x_opt[2]:.0f}) com f(x*) = {f_opt:.2f}."
         )
 
-        # Chama funções para plotar gráficos 2D e 3D da solução (não mostradas aqui)
+        # Chama funções para plotar gráficos 2D e 3D da solução
         plot_2d_problema_5(res)
         plot_3d_problema_5(res)
     else:
@@ -339,14 +346,15 @@ def problema_6():
 
 def problema_7():
     """
-    Max f(x) = 9x1 + 5x2
-
-    sujeito a:
-    * sin(k/13)x1 + cos(k/13)x2 <= 7, k = 1, 2, ..., 13
-    * x1, x2 >= 0
-
     Resolve o Problema 7 de otimização linear, maximizando a função objetivo 9x1 + 5x2 sujeita a restrições
     lineares que envolvem funções trigonométricas.
+
+        Max f(x) = 9x1 + 5x2
+
+    sujeito a:
+
+        sin(k/13)x1 + cos(k/13)x2 <= 7, k = 1, 2, ..., 13
+        x1, x2 >= 0
 
     A função formula o problema no formato padrão de programação linear, convertendo o problema de maximização
     em um de minimização invertendo os coeficientes da função objetivo. Em seguida, utiliza o solver 'linprog'
@@ -387,16 +395,12 @@ def problema_7():
     )
 
     if res.success:
-        # Chama funções para plotar gráficos 2D e 3D da solução (não mostradas aqui)
+        # Chama funções para plotar gráficos 2D e 3D da solução
         plot_2d_problema_7(res)
         plot_3d_problema_7(res)
 
         # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
         print(f'A solução ótima deste problema é x∗ = ({res.x[0]:.2f}, {res.x[1]:.2f}) com f(x∗) = {-res.fun:.2f}.')
-
-        # TODO: Fazer os gráficos
-        plot_2d_problema_7(res)
-        plot_3d_problema_7(res)
     else:
         print("Otimização falhou. Status:", res.status)
         print("Mensagem:", res.message)
@@ -437,10 +441,3 @@ def linear_optimization():
 
 if __name__ == "__main__":
     linear_optimization()
-
-# https://docs.scipy.org/doc/scipy/reference/optimize.linprog-highs.html 13](1,2) Huangfu, Q., Galabova, I.,
-# Feldmeier, M., and Hall, J. A. J. “HiGHS - high performance software for linear optimization.” https://highs.dev/ [
-# 14] Huangfu, Q. and Hall, J. A. J. “Parallelizing the dual revised simplex method.” Mathematical Programming
-# Computation, 10 (1), 119-142, 2018. DOI: 10.1007/s12532-017-0130-5 [15] Harris, Paula MJ. “Pivot selection methods
-# of the Devex LP code.” Mathematical programming 5.1 (1973): 1-28. [16] Goldfarb, Donald, and John Ker Reid. “A
-# practicable steepest-edge simplex algorithm.” Mathematical Programming 12.1 (1977): 361-371.
