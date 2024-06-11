@@ -5,10 +5,15 @@ from graphic_representation import (
     plot_2d_problema_1,
     plot_3d_problema_1,
     plot_2d_problema_2,
+    plot_3d_problema_2,
     plot_2d_problema_3,
+    plot_3d_problema_3,
     plot_2d_problema_4,
+    plot_3d_problema_4,
+    plot_2d_problema_5,
     plot_3d_problema_5,
-    plot_2d_problema_5
+    plot_2d_problema_7,
+    plot_3d_problema_7,
 )
 
 
@@ -75,7 +80,7 @@ def problema_2():
 
     # Plotagem dos gráficos (chamando as funções com apenas 'res')
     plot_2d_problema_2(res)
-    # plot_3d_problema_2(res)
+    plot_3d_problema_2(res)
 
     return res
 
@@ -113,6 +118,7 @@ def problema_3():
     )
 
     plot_2d_problema_3(res)
+    plot_3d_problema_3(res)
     return res
 
 
@@ -157,8 +163,10 @@ def problema_4():
         f'A solução ótima deste problema é x∗ = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}, {res.x[3]:.0f}) com '
         f'f(x∗) = {res.fun:.0f}.')
 
-    # plot_3d_problema_4(res)
     plot_2d_problema_4(res)
+    plot_3d_problema_4(res)
+
+    return res
 
 
 def problema_5():
@@ -220,8 +228,8 @@ def problema_5():
             f"A solução ótima deste problema é x* = ({x_opt[0]:.0f}, {x_opt[1]:.0f}, {x_opt[2]:.0f}) com f(x*) = {f_opt:.2f}."
         )
 
-        plot_3d_problema_5(res)
         plot_2d_problema_5(res)
+        plot_3d_problema_5(res)
     else:
         print("O problema de otimização não encontrou uma solução viável.")
 
@@ -271,6 +279,8 @@ def problema_7():
     )
 
     if res.success:
+        plot_2d_problema_7(res)
+        plot_3d_problema_7(res)
         print(f'A solução ótima deste problema é x∗ = ({res.x[0]:.2f}, {res.x[1]:.2f}) com f(x∗) = {-res.fun:.2f}.')
     else:
         print("Otimização falhou. Status:", res.status)
