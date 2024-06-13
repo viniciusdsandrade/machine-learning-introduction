@@ -1,5 +1,5 @@
 from scipy.optimize import linprog
-import numpy as np
+import math
 
 from graphic_representation import (
     plot_2d_problema_1,
@@ -255,7 +255,8 @@ def problema_4():
 
     # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
     print(
-        f'A solução ótima deste problema é x* = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}, {res.x[3]:.0f}) com f(x*) = {res.fun:.0f}.')
+        f'A solução ótima deste problema é x* = ({res.x[0]:.0f}, {res.x[1]:.0f}, {res.x[2]:.0f}, {res.x[3]:.0f}) com '
+        f'f(x*) = {res.fun:.0f}.')
 
     # Plota gráficos da solução
     plot_2d_problema_4(res)
@@ -356,6 +357,8 @@ def problema_7():
         sin(k/13)x1 + cos(k/13)x2 <= 7, k = 1, 2, ..., 13
         x1, x2 >= 0
 
+    A solução ótima deste problema é x∗ = (0, 1, 11) com f(x∗) = 36.00.
+
     A função formula o problema no formato padrão de programação linear, convertendo o problema de maximização
     em um de minimização invertendo os coeficientes da função objetivo. Em seguida, utiliza o solver 'linprog'
     da biblioteca SciPy para encontrar a solução ótima.
@@ -374,36 +377,43 @@ def problema_7():
     # Coeficientes da função objetivo (invertidos para transformar o problema de maximização em minimização)
     c = [-9, -5]  # Original: 9x1 + 5x2
 
-    # Matriz de coeficientes das restrições de desigualdade, gerada dinamicamente
-    # Cada linha representa uma restrição, cada coluna uma variável
-    A_ub = np.array([[np.sin(k / 13), np.cos(k / 13)] for k in range(1, 14)])
+    # Matriz de coeficientes das restrições de desigualdade
+    # Cada linha representa uma restrição, cada coluna uma variável.
+    A_ub = []
+    b_ub = []
 
-    # Vetor de termos independentes das restrições de desigualdade
-    b_ub = np.array([7] * 13)  # Todas as restrições têm o mesmo termo independente (7)
+    # Quero adicionar uma por uma
+    for k in range(1, 14):
+        # Coeficientes da restrição trigonométrica
+        a = [math.sin(k / 13), math.cos(k / 13)]
 
-    # Limites inferiores e superiores das variáveis (ambas não negativas)
-    bounds = [(0, None), (0, None)]  # x1 >= 0, x2 >= 0
+        # Adiciona a restrição à matriz de coeficientes das restrições de desigualdade
+        A_ub.append(a)
+
+        # Adiciona o termo independente à lista de termos independentes
+        b_ub.append(7)
+
+    # Limites das variáveis (todas não negativas)
+    bounds = [(0, None), (0, None)]
 
     # Resolve o problema de PL usando o solver de alto desempenho 'highs'
     res = linprog(
-        c,  # Coeficientes da função objetivo (minimização)
-        A_ub=A_ub,  # Matriz de coeficientes das restrições de desigualdade (<=)
+        c,  # Coeficientes da função objetivo
+        A_ub=A_ub,  # Matriz de restrições de desigualdade (<=)
         b_ub=b_ub,  # Lados direitos das restrições de desigualdade
-        bounds=bounds,  # Limites das variáveis (ambas não negativas)
+        bounds=bounds,  # Limites das variáveis
         method='highs',  # Método de otimização (highs)
         options={'disp': False}  # Opções (não exibir detalhes)
     )
 
-    if res.success:
-        # Chama funções para plotar gráficos 2D e 3D da solução
-        plot_2d_problema_7(res)
-        plot_3d_problema_7(res)
+    # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
+    print(
+        f'A solução ótima deste problema é x* = ({res.x[0]:.0f}, {res.x[1]:.0f}) com f(x*) = {-res.fun:.2f}.'
+    )
 
-        # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
-        print(f'A solução ótima deste problema é x∗ = ({res.x[0]:.2f}, {res.x[1]:.2f}) com f(x∗) = {-res.fun:.2f}.')
-    else:
-        print("Otimização falhou. Status:", res.status)
-        print("Mensagem:", res.message)
+    # Chama funções para plotar gráficos 2D e 3D da solução
+    plot_2d_problema_7(res)
+    plot_3d_problema_7(res)
 
     # Retorna o objeto com os resultados da otimização (incluindo a solução ótima e o valor da função objetivo)
     return res

@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 import plotly.graph_objects as go
 import numpy as np
 
@@ -202,11 +203,11 @@ def plot_2d_problema_3(res):
 
     # Cria uma grade 2D para x1 e x2
     x1 = np.linspace(x1_range[0], x1_range[1], 100)
-    x2 = np.linspace(x2_range[0], x2_range[1], 100)
-    X1, X2 = np.meshgrid(x1, x2)
+    # x2 = np.linspace(x2_range[0], x2_range[1], 100)
+    # X1, X2 = np.meshgrid(x1, x2)
 
     # Calcula Z_objetivo para a grade 2D (considerando x3 = 0)
-    Z_objetivo = 15 * (X1 + 2 * X2) + 11 * X2
+    # Z_objetivo = 15 * (X1 + 2 * X2) + 11 * X2
 
     # Adiciona as curvas de nível da função objetivo
     # fig.add_trace(go.Contour(x=x1, y=x2, z=Z_objetivo,
@@ -287,8 +288,8 @@ def plot_2d_problema_4(res):
 
     # Cria uma grade 2D para x1 e x2
     x1 = np.linspace(0, 400, 400)
-    x2 = np.linspace(0, 200, 200)
-    X1, X2 = np.meshgrid(x1, x2)
+    # x2 = np.linspace(0, 200, 200)
+    # X1, X2 = np.meshgrid(x1, x2)
 
     # --- Restrições projetadas no plano x1-x2 ---
     # Usamos x4 = 400 - x1 - x2 - x3
@@ -372,7 +373,7 @@ def plot_2d_problema_5(res):
     # Como x1 + x2 + x3 = 12, podemos definir x3 = 12 - x1 - x2
     x1_range = np.linspace(0, 12, 100)
     x2_range = np.linspace(0, 12, 100)
-    x1, x2 = np.meshgrid(x1_range, x2_range)
+    # x1, x2 = np.meshgrid(x1_range, x2_range)
 
     # Restrição 1: x2 >= x1 + 1
     fig1.add_trace(go.Scatter(x=x1_range, y=x1_range + 1, mode='lines', name='x2 >= x1 + 1'))
@@ -436,7 +437,55 @@ def plot_2d_problema_5(res):
 
 
 def plot_2d_problema_7(res):
-    return None
+    """
+    Plota uma representação 2D do Problema 7, mostrando as restrições
+    projetadas no plano x1-x2 e a solução ótima.
+
+    :arg:
+        res: Um objeto 'OptimizeResult' retornado pela função 'linprog',
+              contendo a solução ótima do problema.
+
+    Funcionalidades:
+        - Define os intervalos dos eixos x1 e x2 para abranger a região de interesse do problema.
+        - Cria um gráfico Matplotlib e adiciona as linhas que representam as restrições.
+        - Plota a solução ótima como um ponto destacado.
+        - Preenche a região viável no plano x1-x2 com uma cor clara para facilitar a visualização.
+        - Configura os rótulos dos eixos e o título do gráfico para melhor identificação.
+        - Exibe o gráfico.
+        - Salva o gráfico em um arquivo.
+    """
+
+    fig, ax = plt.subplots()
+
+    # Definindo os intervalos dos eixos
+    x1 = np.linspace(0, 10, 400)
+    # x2 = np.linspace(0, 10, 400)
+    # X1, X2 = np.meshgrid(x1, x2)
+
+    # Funções de restrição
+    for k in range(1, 14):
+        a1 = np.sin(k / 13)
+        a2 = np.cos(k / 13)
+        ax.plot(x1, (7 - a1 * x1) / a2, label=f'Restrição {k}')
+
+    # Adicionando a solução ótima
+    ax.plot(res.x[0], res.x[1], 'ro', label='Solução Ótima')
+
+    # Preenchendo a região viável (corrigido para evitar o warning)
+    y_vals = np.minimum.reduce([(7 - np.sin(k / 13) * x1) / np.cos(k / 13) for k in range(1, 14)])
+    valid_points = np.where(y_vals >= 0)
+    ax.fill_between(x1[valid_points], 0, y_vals[valid_points], color='lightgray', label='Região Viável')
+
+    # Configurações do gráfico
+    ax.set_xlim((0, 10))
+    ax.set_ylim((0, 10))
+    ax.set_xlabel('x1')
+    ax.set_ylabel('x2')
+    ax.set_title('Problema 7 - Visualização 2D')
+    ax.legend()
+
+    # Exibe o gráfico
+    plt.show()
 
 
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -858,4 +907,41 @@ def plot_3d_problema_5(res):
 
 
 def plot_3d_problema_7(res):
-    return None
+    """
+    Plota uma representação 3D do Problema 7, mostrando a região factível
+    e a solução ótima.
+
+    :arg:
+        res: Um objeto 'OptimizeResult' retornado pela função 'linprog',
+              contendo a solução ótima do problema.
+    """
+    fig = go.Figure()
+
+    # Gera uma grade 3D para x1, x2 e x3 (restrição)
+    x1 = np.linspace(0, 10, 100)
+    x2 = np.linspace(0, 10, 100)
+    X1, X2 = np.meshgrid(x1, x2)
+
+    for k in range(1, 14):
+        sin_term = np.sin(k / 13) * X1
+        cos_term = np.cos(k / 13) * X2
+        fig.add_trace(go.Surface(x=X1, y=X2, z=7 - sin_term - cos_term, showscale=False, opacity=0.5,
+                                 name=f'sin({k}/13)x1 + cos({k}/13)x2 <= 7'))
+
+    # Solução Ótima
+    fig.add_trace(
+        go.Scatter3d(x=[res.x[0]], y=[res.x[1]], z=[7 - np.sin(1 / 13) * res.x[0] - np.cos(1 / 13) * res.x[1]],
+                     mode='markers',
+                     marker=dict(size=10, color='red'), name='Solução Ótima'))
+
+    # Configura o layout do gráfico
+    fig.update_layout(
+        scene=dict(
+            xaxis_title="x1",
+            yaxis_title="x2",
+            zaxis_title="Valor da Restrição"
+        ),
+        title="Problema 7 - Visualização 3D"
+    )
+
+    fig.show()
