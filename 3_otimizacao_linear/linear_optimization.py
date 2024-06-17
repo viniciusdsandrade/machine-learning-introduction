@@ -65,7 +65,6 @@ def problema_1():
         b_ub=b,  # Lados direitos das restrições
         bounds=[x0_bounds, x1_bounds],  # Limites das variáveis
         method='highs',  # Método de otimização (highs)
-        options={'disp': False}  # Opções (não exibir detalhes)
     )
 
     # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
@@ -128,7 +127,6 @@ def problema_2():
         b_ub=b,  # Vetor de termos independentes das restrições de desigualdade
         bounds=[x0_bounds, x1_bounds],  # Limites (mínimo e máximo) para cada variável de decisão
         method='highs',  # Método de otimização a ser usado (highs é um solver de alto desempenho)
-        options={'disp': False}  # Opções do solver (neste caso, desativa a exibição de informações)
     )
 
     # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
@@ -196,7 +194,6 @@ def problema_3():
         b_ub=b,  # Vetor de termos independentes das restrições
         bounds=x_bounds,  # Limites das variáveis
         method='highs',  # Método de otimização (highs - alto desempenho)
-        options={'disp': False}  # Desativa saída detalhada do solver
     )
 
     # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
@@ -270,7 +267,14 @@ def problema_4():
     bounds = [(0, None), (0, None), (0, None), (0, None)]
 
     # Resolução do problema de programação linear
-    res = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=A_eq, b_eq=b_eq, bounds=bounds, method='highs')
+    res = linprog(
+        c, A_ub=A_ub,  # Matriz de coeficientes das restrições de desigualdade
+        b_ub=b_ub,  # Vetor de termos independentes das restrições de desigualdade
+        A_eq=A_eq,  # Matriz de coeficientes das restrições de igualdade
+        b_eq=b_eq,  # Vetor de termos independentes das restrições de igualdade
+        bounds=bounds,  # Limites das variáveis
+        method='highs'  # Método de otimização (highs)
+    )
 
     # Exibe a solução ótima encontrada
     print(
@@ -310,9 +314,9 @@ def problema_5():
 
     A solução ótima deste problema é x∗ = (0, 1, 11) com f(x∗) = 36.
 
-    Observação:
+    OBSERVAÇÃO:
 
-    O resultado da otimição é x* = (0, 1, 11) com f(x*) = 33, diferente do esperado (36.0).
+    O resultado da otimição é x* = (0, 1, 11) com f(x*) = 33, diferente do esperado (36).
 
     A função formula o problema no formato padrão de programação linear, convertendo o problema de maximização
     em um de minimização invertendo os coeficientes da função objetivo. Em seguida, utiliza o solver 'linprog'
@@ -351,7 +355,15 @@ def problema_5():
     bounds = [x_bounds, x_bounds, x_bounds]
 
     # Resolver o problema
-    res = linprog(c, A_ub=A, b_ub=b, A_eq=A_eq, b_eq=b_eq, bounds=bounds, method='highs')
+    res = linprog(
+        c,  # Coeficientes da função objetivo
+        A_ub=A,  # Matriz de restrições de desigualdade
+        b_ub=b,  # Vetor de termos independentes das restrições de desigualdade
+        A_eq=A_eq,  # Matriz de restrições de igualdade
+        b_eq=b_eq,  # Vetor de termos independentes das restrições de igualdade
+        bounds=bounds,  # Limites das variáveis
+        method='highs'  # Método de otimização (highs)
+    )
 
     # Imprimir os resultados
     if res.success:
@@ -362,6 +374,8 @@ def problema_5():
         plot_3d_problema_5(res)
     else:
         print("Não foi possível encontrar uma solução ótima.")
+
+    return res
 
 
 def problema_6():
@@ -423,7 +437,6 @@ def problema_7():
     A_ub = []
     b_ub = []
 
-    # Quero adicionar uma por uma
     for k in range(1, 14):
         # Coeficientes da restrição trigonométrica
         a = [math.sin(k / 13), math.cos(k / 13)]
@@ -444,7 +457,6 @@ def problema_7():
         b_ub=b_ub,  # Lados direitos das restrições de desigualdade
         bounds=bounds,  # Limites das variáveis
         method='highs',  # Método de otimização (highs)
-        options={'disp': False}  # Opções (não exibir detalhes)
     )
 
     # Exibe a solução ótima encontrada (convertendo o valor da função objetivo de volta para a maximização)
