@@ -7,34 +7,7 @@ def plot_2d_problema_1(res):
     """
     Plota a região factível e a solução ótima do Problema 1 em 2D,
     mostrando todas as restrições graficamente.
-
-    Esta função cria um gráfico interativo em duas dimensões (2D)
-    utilizando a biblioteca Plotly. O gráfico exibe a região factível
-    do Problema 1, definida pelas restrições do problema, e destaca
-    a solução ótima encontrada pela função 'linprog'.
-
-    Args:
-        res: Um objeto 'OptimizeResult' retornado pela função 'linprog',
-              contendo a solução ótima do problema.
-
-    Funcionalidades:
-        - Define os intervalos dos eixos x1 e x2 para abranger a região de interesse do problema.
-        - Determina as restrições do Problema 1 e as converte em equações para plotagem.
-        - Cria um gráfico Plotly e adiciona as retas que representam as restrições do problema.
-        - Plota a solução ótima como um ponto destacado em vermelho na forma de uma estrela.
-        - Preenche a região factível com uma cor clara para facilitar a visualização.
-        - Configura os rótulos dos eixos e o título do gráfico para melhor identificação.
-        - Exibe o gráfico interativo, permitindo zoom, pan e outras interações.
-
-    Retorna:
-        None (exibe o gráfico diretamente).
-
-    Observações:
-        - A função assume que o resultado da otimização ('res') foi obtido para o Problema 1.
-        - A função utiliza a biblioteca Plotly para criar o gráfico interativo, que oferece recursos
-          avançados de visualização.
     """
-
     # Define os limites dos eixos
     x1_range = [-1, 6]
     x2_range = [-1, 8]
@@ -46,11 +19,11 @@ def plot_2d_problema_1(res):
     # --- Restrições ---
     x1 = np.linspace(x1_range[0], x1_range[1], 500)
 
-    # 2x1 + x2 <= 6  --> x2 <= 6 - 2x1
-    fig.add_trace(go.Scatter(x=x1, y=6 - 2 * x1, mode='lines', name='2x1 + x2 <= 6', line=dict(width=2)))
+    # 2x1 + x2 >= 6  --> x2 >= 6 - 2x1
+    fig.add_trace(go.Scatter(x=x1, y=6 - 2 * x1, mode='lines', name='2x1 + x2 >= 6', line=dict(width=2)))
 
-    # x1 + x2 <= 4  --> x2 <= 4 - x1
-    fig.add_trace(go.Scatter(x=x1, y=4 - x1, mode='lines', name='x1 + x2 <= 4', line=dict(width=2)))
+    # x1 + x2 >= 4  --> x2 >= 4 - x1
+    fig.add_trace(go.Scatter(x=x1, y=4 - x1, mode='lines', name='x1 + x2 >= 4', line=dict(width=2)))
 
     # x1 + 5x2 >= 10  --> x2 >= (10 - x1) / 5
     fig.add_trace(go.Scatter(x=x1, y=(10 - x1) / 5, mode='lines', name='x1 + 5x2 >= 10', line=dict(width=2)))
@@ -59,7 +32,7 @@ def plot_2d_problema_1(res):
 
     # Região Factível (aproximada)
     # Encontre os pontos de interseção das retas para delimitar a região factível
-    fig.add_trace(go.Scatter(x=[0, 2, 10 / 3, 0], y=[2, 0, 8 / 3, 10 / 5],
+    fig.add_trace(go.Scatter(x=[0, 2, 10 / 3, 0], y=[6, 2, 8 / 3, 2],
                              fill="toself", fillcolor="lightgray", line=dict(color="black"),
                              name='Região Viável'))
 
@@ -254,33 +227,7 @@ def plot_2d_problema_4(res):
     """
     Plota uma representação 2D do Problema 4, mostrando todas as restrições
     projetadas no plano x1-x2, com x3 fixo em um valor específico.
-
-    :arg:
-        res: Um objeto 'OptimizeResult' retornado pela função 'linprog',
-              contendo a solução ótima do problema.
-
-    Funcionalidades:
-        - Fixa a variável x3 em um valor específico (x3_fixo).
-        - Define os intervalos dos eixos x1 e x2 para abranger a região de interesse do problema.
-        - Projeta as restrições originais no plano x1-x2, considerando x3 fixo e x4 = 400 - x1 - x2 - x3.
-        - Cria um gráfico Plotly e adiciona as retas que representam as restrições projetadas.
-        - Plota a solução ótima projetada (com x3 fixo e x4 calculado) como um ponto destacado em vermelho.
-        - Preenche a região viável no plano x1-x2 com uma cor clara para facilitar a visualização.
-        - Configura os rótulos dos eixos e o título do gráfico para melhor identificação.
-        - Exibe o gráfico interativo, permitindo zoom, pan e outras interações.
-
-    :return:
-        None (exibe o gráfico diretamente).
-
-    Observações:
-        - A função assume que o resultado da otimização ('res') foi obtido para o Problema 4.
-        - A função utiliza a biblioteca Plotly para criar o gráfico interativo, que oferece recursos
-          avançados de visualização.
-        - A região viável exibida é uma projeção 2D da região factível 4D, considerando x3 fixo.
-        - A solução ótima projetada é o ponto no plano x1-x2 que corresponde à solução ótima do problema
-          original, com x3 fixo e x4 calculado.
     """
-
     fig = go.Figure()
 
     # Fixando x3
@@ -288,8 +235,6 @@ def plot_2d_problema_4(res):
 
     # Cria uma grade 2D para x1 e x2
     x1 = np.linspace(0, 400, 400)
-    # x2 = np.linspace(0, 200, 200)
-    # X1, X2 = np.meshgrid(x1, x2)
 
     # --- Restrições projetadas no plano x1-x2 ---
     # Usamos x4 = 400 - x1 - x2 - x3
@@ -310,9 +255,8 @@ def plot_2d_problema_4(res):
     # --- FIM DAS RESTRIÇÕES ---
 
     # Encontrando a região viável (aproximada)
-    # (Devido à complexidade, faremos uma aproximação visual)
     fig.add_trace(go.Scatter(x=[0, 2 * x3_fixo, 400 - 1.5 * x3_fixo, 400 - x3_fixo, 0],
-                             y=[2 * x3_fixo, 2 * x3_fixo, 400 - 1.5 * x3_fixo - (400 - 1.5 * x3_fixo) / 2, 0, 0],
+                             y=[2 * x3_fixo, 2 * x3_fixo, 400 - 1.5 * x3_fixo - 2 * x3_fixo, 0, 0],
                              fill="toself", fillcolor="lightgray", line=dict(color="black"),
                              name='Região Viável (aproximada)'))
 
@@ -596,7 +540,10 @@ def plot_3d_problema_2(res):
     x1_range = [-1, 6]
     x2_range = [-1, 4]
     funcao_objetivo = '2 * X1 - 3 * X2'  # Função objetivo do problema 2 corrigida
-    restricoes_3d = {'x1 + 2x2 <= 6': '6 - X1 - 2 * X2', '2x1 - x2 <= 8': '8 - 2 * X1 + X2'}  # Restrições 3D
+    restricoes_3d = {
+        'x1 + 2x2 <= 6': '6 - X1 - 2 * X2',
+        '2x1 - x2 <= 8': '8 - 2 * X1 + X2'
+    }  # Restrições 3D
     titulo = 'Problema 2 - Região Factível e Solução Ótima (3D)'
     solucao_otima_nome = 'Solução ótima'
 
@@ -612,21 +559,22 @@ def plot_3d_problema_2(res):
     fig = go.Figure()
 
     # Adiciona a superfície da função objetivo
-    fig.add_trace(go.Surface(x=X1, y=X2, z=Z_obj, name='Função Objetivo', colorscale='viridis'))
+    fig.add_trace(go.Surface(x=X1, y=X2, z=Z_obj, name='Função Objetivo', colorscale='viridis', opacity=0.7))
 
     # Adiciona as superfícies das restrições
     for nome, restricao_z in restricoes_3d.items():
         Z = eval(restricao_z)
-        fig.add_trace(go.Surface(x=X1, y=X2, z=Z, name=nome, showscale=False))
+        fig.add_trace(go.Surface(x=X1, y=X2, z=Z, name=nome, showscale=False, opacity=0.5))
 
-    # Plota a solução ótima (corrigido para x∗ = (4, 0))
-    fig.add_trace(go.Scatter3d(x=[res.x[0]], y=[0], z=[res.fun],  # Corrigido para y = 0
+    # Plota a solução ótima
+    fig.add_trace(go.Scatter3d(x=[res.x[0]], y=[res.x[1]], z=[-res.fun],  # y corrigido para res.x[1]
                                mode='markers', marker=dict(size=10, color='red'),
                                name=solucao_otima_nome))
 
     # Adiciona uma linha tracejada vertical da solução ótima até o plano xy
-    fig.add_trace(go.Scatter3d(x=[res.x[0], res.x[0]], y=[0, 0], z=[0, res.fun],  # Corrigido para y = 0
-                               mode='lines', line=dict(color='red', dash='dash'), showlegend=False))
+    fig.add_trace(
+        go.Scatter3d(x=[res.x[0], res.x[0]], y=[res.x[1], res.x[1]], z=[0, -res.fun],  # y corrigido para res.x[1]
+                     mode='lines', line=dict(color='red', dash='dash'), showlegend=False))
 
     # Configura o layout do gráfico
     fig.update_layout(
@@ -789,77 +737,43 @@ def plot_3d_problema_3(res):
 
 
 def plot_3d_problema_4(res):
-    """
-    Plota uma representação 3D do Problema 4 com elementos visuais aprimorados,
-    incluindo as restrições.
-    """
     fig = go.Figure()
-
-    # Solução Ótima (destacada)
     fig.add_trace(go.Scatter3d(
-        x=[res.x[0]],
-        y=[res.x[1]],
-        z=[res.x[2]],
-        mode='markers',
-        marker=dict(size=8, color='red'),
+        x=[res.x[0]], y=[res.x[1]], z=[res.x[2]],
+        mode='markers', marker=dict(size=8, color='red'),
         name='Solução Ótima'
     ))
 
-    # Plano de referência no eixo x1-x2 (z=0)
-    x1_range = np.linspace(0, 400, 20)  # Ajustado para o problema 4
-    x2_range = np.linspace(0, 200, 20)  # Ajustado para o problema 4
+    x1_range = np.linspace(0, 400, 20)
+    x2_range = np.linspace(0, 400, 20)
     x1_plane, x2_plane = np.meshgrid(x1_range, x2_range)
-    fig.add_trace(go.Surface(
-        x=x1_plane,
-        y=x2_plane,
-        z=np.zeros_like(x1_plane),
-        colorscale='Greys',
-        opacity=0.3,
-        showscale=False
-    ))
 
-    # --- RESTRIÇÕES DO PROBLEMA 4 ---
+    z_restricao1 = np.zeros_like(x1_plane)
+    y_restricao1 = x1_plane / 2
 
-    # Restrição 1: x1 - 2*x2 >= 0  --> x2 <= x1 / 2
-    z_restricao1 = x1_plane / 2
+    x2_plane_r2, z_restricao2 = np.meshgrid(x2_range, x2_range / 2)
+    x1_plane_r2 = np.zeros_like(x2_plane_r2)
 
-    # Restrição 2: x2 - 2*x3 >= 0  --> x3 <= x2 / 2
-    # Para esta restrição, vamos fixar x1 em um valor dentro do intervalo
-    x1_fixo = 200  # Você pode ajustar este valor
-    x2_restricao2 = np.linspace(0, x1_fixo / 2, 20)  # Ajustado para x1 fixo
-    x2_plane_r2, z_restricao2 = np.meshgrid(x2_restricao2, x2_restricao2 / 2)
-    x1_plane_r2 = np.full_like(x2_plane_r2, x1_fixo)  # Cria um plano em x1 = x1_fixo
+    x3_range = np.linspace(0, 200, 20)
+    x4_plane, z_restricao3 = np.meshgrid(x3_range, x3_range / 2)
+    x1_plane_r3 = np.zeros_like(x4_plane)
+    x2_plane_r3 = np.zeros_like(x4_plane)
 
-    # Restrição 3: x3 - 2*x4 >= 0 → x4 ← x3 / 2
-    # Similar à restrição 2, vamos fixar x1 e x2
-    x2_fixo = 100  # Você pode ajustar este valor
-    x3_restricao3 = np.linspace(0, x2_fixo / 2, 20)
-    z_restricao3, x4_plane_r3 = np.meshgrid(x3_restricao3 / 2, x3_restricao3)
-    x1_plane_r3 = np.full_like(z_restricao3, x1_fixo)
-    x2_plane_r3 = np.full_like(z_restricao3, x2_fixo)
+    fig.add_trace(
+        go.Surface(x=x1_plane, y=y_restricao1, z=z_restricao1, colorscale='Blues', opacity=0.6, name='x2 <= x1 / 2'))
+    fig.add_trace(
+        go.Surface(x=x1_plane_r2, y=x2_plane_r2, z=z_restricao2, colorscale='Greens', opacity=0.6, name='x3 <= x2 / 2'))
+    fig.add_trace(
+        go.Surface(x=x1_plane_r3, y=x2_plane_r3, z=z_restricao3, colorscale='Reds', opacity=0.6, name='x4 <= x3 / 2'))
 
-    # Adicione as superfícies das restrições ao gráfico
-    fig.add_trace(go.Surface(x=x1_plane, y=x2_plane, z=z_restricao1, name='x2 <= x1 / 2', opacity=0.6))
-    fig.add_trace(go.Surface(x=x1_plane_r2, y=x2_plane_r2, z=z_restricao2, name='x3 <= x2 / 2', opacity=0.6))
-    fig.add_trace(go.Surface(x=x1_plane_r3, y=x2_plane_r3, z=z_restricao3, name='x4 <= x3 / 2', opacity=0.6))
-
-    # --- FIM DAS RESTRIÇÕES ---
-
-    # Configura o layout com zoom, iluminação e destaque dos eixos
     fig.update_layout(
         scene=dict(
-            xaxis_title="x1",
-            yaxis_title="x2",
-            zaxis_title="x3",
-            xaxis=dict(showgrid=True, gridcolor='lightgray', zeroline=True, zerolinecolor='black'),
-            yaxis=dict(showgrid=True, gridcolor='lightgray', zeroline=True, zerolinecolor='black'),
-            zaxis=dict(showgrid=True, gridcolor='lightgray', zeroline=True, zerolinecolor='black'),
-            aspectmode='cube',  # Mantém a proporção dos eixos
-            camera=dict(eye=dict(x=1.2, y=1.2, z=0.6))  # Posição da câmera
+            xaxis_title='x1',
+            yaxis_title='x2',
+            zaxis_title='x3'
         ),
-        title="Problema 4 - Visualização 3D (x4=0)",
+        title="Problema 4 - Visualização 3D"
     )
-
     fig.show()
 
 
@@ -908,7 +822,7 @@ def plot_3d_problema_5(res):
 
 def plot_3d_problema_7(res):
     """
-    Plota uma representação 3D do Problema 7, mostrando a região factível
+    Plota uma representação 3D do Problema 7, mostrando cada restrição como um plano
     e a solução ótima.
 
     :arg:
@@ -917,31 +831,24 @@ def plot_3d_problema_7(res):
     """
     fig = go.Figure()
 
-    # Gera uma grade 3D para x1, x2 e x3 (restrição)
+    # Gera uma grade 2D para x1 e x2
     x1 = np.linspace(0, 10, 100)
     x2 = np.linspace(0, 10, 100)
     X1, X2 = np.meshgrid(x1, x2)
 
+    # Plota cada restrição como um plano
     for k in range(1, 14):
-        sin_term = np.sin(k / 13) * X1
-        cos_term = np.cos(k / 13) * X2
-        fig.add_trace(go.Surface(x=X1, y=X2, z=7 - sin_term - cos_term, showscale=False, opacity=0.5,
-                                 name=f'sin({k}/13)x1 + cos({k}/13)x2 <= 7'))
+        Z = 7 - np.sin(k / 13) * X1 - np.cos(k / 13) * X2  # Calcula o valor de Z para a restrição k
+        fig.add_trace(go.Surface(x=X1, y=X2, z=Z, colorscale='Blues', showscale=False, opacity=0.5,
+                                 name=f'Restrição {k}'))
 
-    # Solução Ótima
+    # Adiciona a solução ótima como um ponto destacado no gráfico
     fig.add_trace(
         go.Scatter3d(x=[res.x[0]], y=[res.x[1]], z=[7 - np.sin(1 / 13) * res.x[0] - np.cos(1 / 13) * res.x[1]],
                      mode='markers',
-                     marker=dict(size=10, color='red'), name='Solução Ótima'))
+                     marker=dict(size=8, color='red'), name='Solução Ótima'))
 
     # Configura o layout do gráfico
-    fig.update_layout(
-        scene=dict(
-            xaxis_title="x1",
-            yaxis_title="x2",
-            zaxis_title="Valor da Restrição"
-        ),
-        title="Problema 7 - Visualização 3D"
-    )
-
+    fig.update_layout(scene=dict(xaxis_title="x1", yaxis_title="x2", zaxis_title="Valor da Restrição"),
+                      title="Problema 7 - Visualização 3D das Restrições")
     fig.show()
