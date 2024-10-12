@@ -1,0 +1,4 @@
+beautifulsoup4~=4.12.3
+filelock~=3.13.4
+pillow~=10.3.0
+pip~=24.2
