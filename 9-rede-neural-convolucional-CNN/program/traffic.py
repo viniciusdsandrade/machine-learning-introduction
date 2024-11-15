@@ -6,20 +6,21 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 import sys
 import numpy as np
+from pathlib import Path
 from PIL import Image
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
 # Definições de hiperparâmetros
-EPOCHS = 10        # Número de épocas para o treinamento
-IMAGE_WIDTH = 30   # Largura das imagens após redimensionamento
-IMAGE_HEIGHT = 30  # Altura das imagens após redimensionamento
-N = 43             # Número de categorias/classes de sinais de trânsito
-TEST_SIZE = 0.40   # Proporção de dados reservados para teste
+EPOCHS = 10               # Número de épocas para o treinamento
+IMAGE_WIDTH = 30          # Largura das imagens após redimensionamento
+IMAGE_HEIGHT = 30         # Altura das imagens após redimensionamento
+N = 43                    # Número de categorias/classes de sinais de trânsito
+TEST_SIZE = 0.40          # Proporção de dados reservados para teste
 
 """
 Este script treina uma rede neural convolucional para classificar sinais de trânsito usando o conjunto de dados GTSRB (German Traffic Sign Recognition Benchmark).
-O usuário pode selecionar diferentes configurações de diretórios para os dados e o modelo através de um menu interativo.
+O script detecta automaticamente o caminho base da aplicação e configura os diretórios de dados e modelo de acordo.
 O modelo treinado é salvo no formato nativo Keras para uso posterior.
 """
 
@@ -32,7 +33,7 @@ def load_data(directory):
     e conter as imagens da classe respectiva.
 
     Parâmetros:
-        directory (str): O caminho para o diretório contendo as imagens organizadas em subpastas por classe.
+        directory (Path): O caminho para o diretório contendo as imagens organizadas em subpastas por classe.
 
     Retorna:
         tuple: Uma tupla contendo duas listas:
@@ -45,8 +46,8 @@ def load_data(directory):
 
     # Itera por cada categoria/classe
     for label in range(N):
-        label_dir = os.path.join(directory, str(label))
-        if not os.path.isdir(label_dir):
+        label_dir = directory / str(label)
+        if not label_dir.is_dir():
             print(f"Diretório não encontrado para a categoria {label}: {label_dir}")
             continue  # Pula se o diretório não existir
 
@@ -54,10 +55,10 @@ def load_data(directory):
 
         # Itera por cada arquivo de imagem na categoria
         for filename in os.listdir(label_dir):
-            filepath = os.path.join(label_dir, filename)
+            filepath = label_dir / filename
 
             # Verifica se é um arquivo
-            if not os.path.isfile(filepath):
+            if not filepath.is_file():
                 continue
 
             try:
@@ -138,39 +139,62 @@ def get_model():
     return model
 
 
-def mostrar_menu():
+def detect_base_dir(target_folder_name="9-rede-neural-convolucional-CNN"):
     """
-    Exibe um menu interativo para o usuário selecionar a configuração desejada.
+    Detecta automaticamente o caminho base da aplicação percorrendo o diretório pai até encontrar a pasta alvo.
 
-    As opções incluem diferentes diretórios de dados e locais para salvar o modelo.
+    Parâmetros:
+        target_folder_name (str): O nome da pasta alvo que representa o caminho base da aplicação.
+
+    Retorna:
+        Path: O caminho para a pasta alvo.
+
+    Se a pasta alvo não for encontrada, o script será encerrado com uma mensagem de erro.
+    """
+    current_dir = Path(__file__).resolve().parent
+    while True:
+        if current_dir.name == target_folder_name:
+            return current_dir
+        if current_dir.parent == current_dir:
+            # Chegou ao diretório raiz sem encontrar a pasta alvo
+            break
+        current_dir = current_dir.parent
+
+    print(f"Pasta base '{target_folder_name}' não encontrada. Verifique a estrutura de diretórios.")
+    sys.exit(1)
+
+
+def config_paths(base_dir):
+    """
+    Configura os caminhos para data_directory e model_filename relativamente ao caminho base.
+
+    Parâmetros:
+        base_dir (Path): O caminho base da aplicação.
 
     Retorna:
         tuple: Uma tupla contendo:
-            - data_directory (str): Caminho para o diretório de dados selecionado.
-            - model_filename (str): Caminho para salvar o modelo treinado.
-            - config_name (str): Nome da configuração selecionada.
+            - data_directory (Path): Caminho para o diretório de dados.
+            - model_filename (Path): Caminho para salvar o modelo treinado.
+            - config_name (str): Nome da configuração (baseado no ambiente, se necessário).
     """
-    print("Selecione a configuração:")
-    print("1. desktop_vini")
-    print("2. laptop_vini")
+    # Aqui você pode adicionar lógica adicional para diferentes ambientes se necessário
+    # Por exemplo, se precisar de configurações diferentes dentro do mesmo projeto
 
-    while True:
-        escolha = input("Digite sua escolha (1 ou 2): ")
-        if escolha == '1':
-            data_directory = r"C:\Users\Pichau\Desktop\ti327v-projeto4-equipe4\program\gtsrb"
-            model_filename = r"C:\Users\Pichau\Desktop\ti327v-projeto4-equipe4\program\saved_model\my_model.keras"
-            return data_directory, model_filename, 'desktop_vini'
-        elif escolha == '2':
-            data_directory = r"C:\Users\vinic\OneDrive\Área de Trabalho\ti327v-projeto4-equipe4\program\gtsrb"
-            model_filename = r"C:\Users\vinic\OneDrive\Área de Trabalho\ti327v-projeto4-equipe4\program\saved_model\my_model.keras"
-            return data_directory, model_filename, 'laptop_vini'
-        else:
-            print("Escolha inválida. Por favor, digite 1 ou 2.")
+    # Para simplificar, assumimos uma única configuração baseada no caminho base
+    data_directory = base_dir / "program" / "gtsrb"
+    model_filename = base_dir / "program" / "saved_model" / "my_model.keras"
+    config_name = 'default_config'
+
+    return data_directory, model_filename, config_name
 
 
 if __name__ == '__main__':
-    # Mostrar o menu e obter as configurações selecionadas
-    data_directory, model_filename, config_name = mostrar_menu()
+    # Detectar o caminho base da aplicação
+    base_dir = detect_base_dir()
+    print(f"Caminho base detectado: {base_dir}")
+
+    # Configurar os caminhos relativos
+    data_directory, model_filename, config_name = config_paths(base_dir)
     print(f"\nConfiguração selecionada: {config_name}")
     print(f"Diretório de dados: {data_directory}")
     print(f"Caminho para salvar o modelo: {model_filename}\n")
@@ -207,9 +231,9 @@ if __name__ == '__main__':
     model.evaluate(x_test, y_test, verbose=2)
 
     # Garante que o diretório para salvar o modelo existe
-    model_directory = os.path.dirname(model_filename)
-    if not os.path.exists(model_directory):
-        os.makedirs(model_directory)
+    model_directory = model_filename.parent
+    if not model_directory.exists():
+        model_directory.mkdir(parents=True, exist_ok=True)
 
     # Salva o modelo treinado no formato nativo Keras
     model.save(model_filename)
