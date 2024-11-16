@@ -190,7 +190,7 @@ def plot_confusion_matrix_func(all_true, all_predicted, results_directory):
     plt.ylabel('Classe Verdadeira')
     plt.xticks(rotation=90)
     plt.yticks(rotation=0)
-    confusion_matrix_path = results_directory / 'confusion_matrix_test.png'
+    confusion_matrix_path = 'C:\\Users\\vinic\OneDrive\\Área de Trabalho\\machine-learning-introduction\\9-rede-neural-convolucional-CNN\\program\\results\\test\\confusion_matrix_test.png'
     plt.savefig(confusion_matrix_path, bbox_inches='tight')
     plt.close()
     print(f"Matriz de confusão salva em: {confusion_matrix_path}")
@@ -208,7 +208,7 @@ def save_classification_report_func(all_true, all_predicted, results_directory):
     target_names = [classes[i] for i in range(N)]
     report = classification_report(all_true, all_predicted, target_names=target_names)
 
-    report_path = results_directory / 'classification_report_test.txt'
+    report_path = results_directory / 'test_classification_report.txt'
     with open(report_path, 'w') as f:
         f.write(report)
     print(f"Relatório de classificação salvo em: {report_path}")
