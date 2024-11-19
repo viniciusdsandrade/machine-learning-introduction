@@ -15,11 +15,11 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 
 # Definições de hiperparâmetros
-EPOCHS = 10  # Número de épocas para o treinamento
-IMAGE_WIDTH = 30  # Largura das imagens após redimensionamento
-IMAGE_HEIGHT = 30  # Altura das imagens após redimensionamento
-N = 43  # Número de categorias/classes de sinais de trânsito
-TEST_SIZE = 0.40  # Proporção de dados reservados para teste
+EPOCHS = 15              # Número de épocas para o treinamento
+IMAGE_WIDTH = 30         # Largura das imagens após redimensionamento
+IMAGE_HEIGHT = 30        # Altura das imagens após redimensionamento
+N = 43                   # Número de categorias/classes de sinais de trânsito
+TEST_SIZE = 0.40         # Proporção de dados reservados para teste
 
 # Dicionário de mapeamento das classes para os nomes dos sinais de trânsito
 classes_dict = {
@@ -113,17 +113,10 @@ def load_data(directory):
                 continue
 
             try:
-                # Carrega a imagem usando PIL
-                img = Image.open(filepath)
-
-                # Redimensiona a imagem para o tamanho padrão
-                img = img.resize((IMAGE_WIDTH, IMAGE_HEIGHT))
-
-                # Converte a imagem para RGB (caso esteja em outro modo)
-                img = img.convert('RGB')
-
-                # Converte a imagem em um array NumPy
-                img_array = np.array(img)
+                img = Image.open(filepath)  # Carrega a imagem usando PIL
+                img = img.resize((IMAGE_WIDTH, IMAGE_HEIGHT))  # Redimensiona a imagem para o tamanho padrão
+                img = img.convert('RGB')  # Converte a imagem para RGB (caso esteja em outro modo)
+                img_array = np.array(img)  # Converte a imagem em um array NumPy
 
                 # Adiciona a imagem e o rótulo às listas
                 images.append(img_array)
