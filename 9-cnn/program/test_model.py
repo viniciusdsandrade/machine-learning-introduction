@@ -198,6 +198,7 @@ def plot_confusion_matrix_func(all_true, all_predicted, results_directory):
     plt.close()
     print(f"Matriz de confusão salva em: {confusion_matrix_path}")
 
+
 def save_classification_report_func(all_true, all_predicted, results_directory):
     """
     Salva o relatório de classificação com todas as previsões e rótulos verdadeiros.
